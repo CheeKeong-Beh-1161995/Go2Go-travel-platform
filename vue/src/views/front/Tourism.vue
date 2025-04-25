@@ -32,6 +32,7 @@
 <script setup>
 import { reactive} from "vue";
 import request from "@/utils/request.js";
+import router from "@/router/index.js";
 
 const data = reactive({
   tourismList: [],
@@ -55,6 +56,8 @@ const load = () => {
     if (res.code === '200') {
       data.tourismList = res.data?.list || []
       data.total = res.data?.total
+    }else if (res.code === '401') {
+      router.push('/loginNav/login')
     }
   })
 }

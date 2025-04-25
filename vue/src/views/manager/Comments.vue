@@ -13,7 +13,7 @@
       <el-table stripe :data="data.tableData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="Title" show-overflow-tooltip />
-        <el-table-column prop="descr" label="Description" />
+        <el-table-column prop="descr" label="Description" show-overflow-tooltip />
         <el-table-column prop="content" label="Content" width="100px">
           <template #default="scope">
             <el-button @click="preview(scope.row.content)">View Content</el-button>
@@ -27,13 +27,13 @@
         <el-table-column prop="location" label="Location" />
         <el-table-column label="Review Status">
           <template #default="scope">
-            <el-tag type="success" v-if="scope.row.status === 'approved'">Approved</el-tag>
+            <el-tag type="success" v-if="scope.row.status === '通过'">Approved</el-tag>
             <el-tag type="danger" v-if="scope.row.status === '拒绝'">Rejected</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="Operation" width="180" fixed="right">
           <template v-slot="scope">
-            <el-button type="primary" size="small" @click="changeStatus(scope.row, 'approved')" v-if="scope.row.status === '待审核'">Approve</el-button>
+            <el-button type="primary" size="small" @click="changeStatus(scope.row, '通过')" v-if="scope.row.status === '待审核'">Approve</el-button>
             <el-button type="danger" size="small" @click="changeStatus(scope.row, '拒绝')" v-if="scope.row.status === '待审核'">Reject</el-button>
             <el-button type="danger" circle :icon="Delete" @click="del(scope.row.id)"></el-button>
           </template>

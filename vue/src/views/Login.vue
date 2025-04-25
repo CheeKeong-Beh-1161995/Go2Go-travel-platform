@@ -1,18 +1,18 @@
 <template>
   <div class="login-container">
     <div class="login-box">
-      <div style="font-weight: bold; font-size: 24px; text-align: center; margin-bottom: 30px; color: #147300">Welcome to Login</div>
+      <div style="font-weight: bold; font-size: 20px; text-align: center; margin-bottom: 30px; color: #147300">Welcome to Login</div>
       <el-form ref="formRef" :model="data.form" :rules="data.rules">
-        <el-form-item prop="username">
+        <el-form-item prop="username" style="height: 60px; line-height: 60px;">
           <el-input :prefix-icon="User" size="large" v-model="data.form.username" placeholder="Enter your username"></el-input>
         </el-form-item>
-        <el-form-item prop="email">
-          <el-input :prefix-icon="User" size="large" v-model="data.form.email" placeholder="Enter your email"></el-input>
-        </el-form-item>
-        <el-form-item prop="password">
+<!--        <el-form-item prop="email" style="height: 60px; line-height: 60px;">-->
+<!--          <el-input :prefix-icon="User" size="large" v-model="data.form.email" placeholder="Enter your email"></el-input>-->
+<!--        </el-form-item>-->
+        <el-form-item prop="password" style="height: 60px; line-height: 60px;">
           <el-input show-password :prefix-icon="Lock" size="large" v-model="data.form.password" placeholder="Enter your password"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item style="height: 80px; line-height: 80px;">
           <el-button size="large" type="primary" style="width: 100%" @click="login">Login</el-button>
         </el-form-item>
         <div style="display: flex">
@@ -136,7 +136,7 @@ const login = () => {
   width: 350px;
   padding: 30px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 10px rgba(1, 1, 1, 1);
+  background-color: rgba(255, 255, 255, 255);
 }
 </style>

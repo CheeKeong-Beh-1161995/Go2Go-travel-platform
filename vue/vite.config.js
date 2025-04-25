@@ -11,7 +11,7 @@ import ElementPlus from 'unplugin-element-plus/vite'
 export default defineConfig({
   plugins: [
     vue(),
-    // Custom configuration
+    // 按需定制主题配置
     ElementPlus({
       useSource: true,
     }),
@@ -22,7 +22,7 @@ export default defineConfig({
       resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
     }),
   ],
-  // Preload the components necessary for the project
+  // 预加载项目必需的组件
   optimizeDeps: {
     include: [
       "vue",
@@ -93,7 +93,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        // Automatically import custom style files for style overrides
+        // 自动导入定制化样式文件进行样式覆盖
         additionalData: `
           @use "@/assets/css/index.scss" as *;
         `,

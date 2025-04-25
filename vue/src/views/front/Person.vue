@@ -111,7 +111,7 @@ const data = reactive({
       {
         trigger: 'blur',
         validator: (rule, value, callback) => {
-          var phonereg = /^\d{1,21}$/
+          var phonereg = /^\d{7,20}$/
           if (!phonereg.test(value)) {
             callback(new Error('Invalid phone number format'))
           }else {

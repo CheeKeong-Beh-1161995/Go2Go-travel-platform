@@ -3,22 +3,22 @@
     <div class="login-box">
       <div style="font-weight: bold; font-size: 24px; text-align: center; margin-bottom: 30px; color: #1450aa">Welcome to Register</div>
       <el-form ref="formRef" :model="data.form" :rules="data.rules">
-        <el-form-item prop="username">
+        <el-form-item prop="username" style="height: 60px; line-height: 60px;">
           <el-input :prefix-icon="User" size="large" v-model="data.form.username" placeholder="Enter your username"></el-input>
         </el-form-item>
-        <el-form-item prop="email">
+        <el-form-item prop="email" style="height: 60px; line-height: 60px;">
           <el-input :prefix-icon="User" size="large" v-model="data.form.email" placeholder="Enter your email"></el-input>
         </el-form-item>
-        <el-form-item prop="phone">
+        <el-form-item prop="phone" style="height: 60px; line-height: 60px;">
           <el-input :prefix-icon="User" size="large" v-model="data.form.phone" placeholder="Enter your phone number"></el-input>
         </el-form-item>
-        <el-form-item prop="password">
+        <el-form-item prop="password" style="height: 60px; line-height: 60px;">
           <el-input show-password :prefix-icon="Lock" size="large" v-model="data.form.password" placeholder="Enter your password"></el-input>
         </el-form-item>
-        <el-form-item prop="confirmPassword">
+        <el-form-item prop="confirmPassword" style="height: 80px; line-height: 80px;">
           <el-input show-password :prefix-icon="Lock" size="large" v-model="data.form.confirmPassword" placeholder="Confirm your password"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item style="height: 60px; line-height: 60px;">
           <el-button size="large" type="primary" style="width: 100%" @click="register">Register</el-button>
         </el-form-item>
         <div style="text-align: right">
@@ -119,7 +119,7 @@ const data = reactive({
       {
         trigger: 'blur',
         validator: (rule, value, callback) => {
-          var phonereg = /^\d{1,21}$/
+          var phonereg = /^\d{7,20}$/
           if (!phonereg.test(value)) {
             callback(new Error('Invalid phone number format'))
           }else {

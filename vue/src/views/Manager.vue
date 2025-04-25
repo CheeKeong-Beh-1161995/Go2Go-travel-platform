@@ -80,7 +80,7 @@ const data = reactive({
 })
 
 if (data.user.role !== 'ADMIN'){
-  location.href = '/login'
+  location.href = '/loginNav/adminLogin'
 }
 
 const logout = () => {

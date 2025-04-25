@@ -30,6 +30,7 @@ const router = createRouter({
         { path: 'home', component: () => import('@/views/front/Home.vue'),  },
         { path: 'home_login', component: () => import('@/views/front/Home_login.vue'),  },
         { path: 'addComments', component: () => import('@/views/front/addComments.vue'),  },
+        { path: 'addTravels', component: () => import('@/views/front/addTravels.vue'),  },
         { path: 'person', component: () => import('@/views/front/Person.vue'), },
         { path: 'password', component: () => import('@/views/front/Password.vue'), },
         { path: 'tourism', component: () => import('@/views/front/Tourism.vue'), },
@@ -40,6 +41,7 @@ const router = createRouter({
         { path: 'guest', component: () => import('@/views/front/Guest.vue'), },
         { path: 'car', component: () => import('@/views/front/Car.vue'), },
         { path: 'carDetail', component: () => import('@/views/front/CarDetail.vue'), },
+        { path: 'travelDetail', component: () => import('@/views/front/travelDetail.vue'), },
       ]
     },
     {

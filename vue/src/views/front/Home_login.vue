@@ -11,14 +11,14 @@
       <div style="flex: 1">
         <div style="display: flex; align-items: center; border-bottom: 1px solid #ddd">
           <div class="item" :class="{ 'active' : data.sort === 'hot' }" @click="loadBySort('hot')">Recommended tours</div>
-          <div class="item" :class="{ 'active' : data.sort === 'new' }" @click="loadBySort('new')">Recommended car rental services</div>
+          <div class="item" :class="{ 'active' : data.sort === 'new' }" @click="loadCarBySort('hot')">Recommended car rental services</div>
           <div style="flex: 1; text-align: right">
             <el-button @click="goPage('/front/addComments')" type="primary" style="padding: 10px 30px"><el-icon><Edit /></el-icon>Write a review</el-button>
           </div>
         </div>
 
         <div>
-          <div v-for="item in data.travelList" :key="item.id" style="margin: 20px 0">
+          <div v-if="data.sort === 'hot'" v-for="item in data.travelList" :key="item.id" style="margin: 20px 0">
             <div style="display: flex; grid-gap: 20px">
               <img :src="item.cover" alt="" style="width: 180px; height: 150px; border-radius: 5px">
               <div style="flex: 1">
@@ -34,7 +34,12 @@
             </div>
           </div>
 
-          <div style="display: flex; justify-content: flex-end" v-if="data.total">
+          <div style="flex: 1; text-align: right">
+            <el-button @click="goPage('/front/addTravels')" type="primary" style="padding: 10px 30px"><el-icon><Edit /></el-icon>Write a travels</el-button>
+          </div>
+
+
+          <div style="display: flex; justify-content: flex-end; height: 50px" v-if="data.total">
             <el-pagination @current-change="loadTravels" size="small" background layout="prev, pager, next" :page-size="data.pageSize" v-model:current-page="data.pageNum" :total="data.total" />
           </div>
         </div>
@@ -61,8 +66,8 @@
           <div style="padding: 10px 0; border-bottom: 1px solid #ddd">
             <div style="flex: 1; font-size: 18px">Customer reviews</div>
           </div>
-          <div v-for="item in data.noticeList" :key="item.id" style="margin: 10px 0">
-            <div style="font-size: 12px; color: #666;">{{ item.content }}</div>
+          <div v-for="item in data.commentsList" :key="item.id" style="margin: 10px 0">
+            <div style="font-size: 12px; color: #666;">{{ item.descr }}</div>
           </div>
         </div>
       </div>
@@ -79,6 +84,7 @@ import img3 from '@/assets/imgs/3.jpg'
 import {Edit, Location, View, Clock} from "@element-plus/icons-vue";
 import request from "@/utils/request.js";
 import Footer from "@/components/Footer.vue"
+import router from "@/router/index.js";
 
 const data = reactive({
   imgs: [img1, img2, img3],
@@ -88,7 +94,8 @@ const data = reactive({
   total: 0,
   travelList: [],
   articleList: [],
-  noticeList: []
+  commentsList: [],
+  carList: []
 })
 
 const goPage = (path) => {
@@ -96,7 +103,11 @@ const goPage = (path) => {
 }
 
 request.get('/article/selectRecommend').then(res => {
-  data.articleList = res.data
+  if (res.code === '200'){
+    data.articleList = res.data
+  }else if (res.code === '401') {
+    router.push('/loginNav/login')
+  }
 })
 
 const top = (id) => {
@@ -106,6 +117,45 @@ const top = (id) => {
 const loadBySort = (sort) => {
   data.sort = sort
   loadTravels()
+}
+
+const loadCarBySort = (sort) => {
+  data.sort = sort
+  loadCarService()
+}
+
+const loadComments = () =>{
+  request.get('/comments/selectPage', {
+    params: {
+      pageNum: data.pageNum,
+      pageSize: data.pageSize,
+      sort: data.sort
+    }
+  }).then(res => {
+    if (res.code === '200') {
+      data.commentsList = res.data?.list || []
+      data.total = res.data?.total
+    }else if (res.code === '401') {
+      router.push('/loginNav/login')
+    }
+  })
+}
+
+const loadCarService = () => {
+  request.get('/car/selectPage', {
+    params: {
+      pageNum: data.pageNum,
+      pageSize: data.pageSize,
+      sort: data.sort
+    }
+  }).then(res => {
+    if (res.code === '200') {
+      data.travelList = res.data?.list || []
+      data.total = res.data?.total
+    }else if (res.code === '401') {
+      router.push('/loginNav/login')
+    }
+  })
 }
 
 const loadTravels = () => {
@@ -119,9 +169,12 @@ const loadTravels = () => {
     if (res.code === '200') {
       data.travelList = res.data?.list || []
       data.total = res.data?.total
+    }else if (res.code === '401') {
+      router.push('/loginNav/login')
     }
   })
 }
+loadComments()
 loadTravels()
 </script>
 

@@ -4,11 +4,11 @@ import router from "@/router/index.js";
 
 const request = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
-    timeout: 30000  // Backend API timeout
+    timeout: 30000  // 后台接口超时时间
 })
 
-// Request interceptor
-// Can be used to process the request before it's sent
+// request 拦截器
+// 可以自请求发送前对请求做一些处理
 request.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
     let user = JSON.parse(localStorage.getItem("xm-user") || '{}')
@@ -18,21 +18,21 @@ request.interceptors.request.use(config => {
     return Promise.reject(error)
 });
 
-// Response interceptor
-// Can be used to handle the response results
+// response 拦截器
+// 可以在接口响应后统一处理结果
 request.interceptors.response.use(
     response => {
         let res = response.data;
-        // If the response is a file
+        // 如果是返回的文件
         if (response.config.responseType === 'blob') {
             return res
         }
-        // Show message when validation failed
+        // 当权限验证不通过的时候给出提示
         if (res.code === '401') {
             ElMessage.error(res.msg)
             router.push('/login')
         }
-         // Handle case where the server returns a string
+        // 兼容服务端返回的字符串数据
         if (typeof res === 'string') {
             res = res ? JSON.parse(res) : res
         }
@@ -40,9 +40,9 @@ request.interceptors.response.use(
     },
     error => {
         if (error.response.status === 404) {
-            ElMessage.error('API point not found')
+            ElMessage.error('未找到请求接口')
         } else if (error.response.status === 500) {
-            ElMessage.error('System error, check the backend system')
+            ElMessage.error('系统异常，请查看后端控制台报错')
         } else {
             console.error(error.message)
         }
