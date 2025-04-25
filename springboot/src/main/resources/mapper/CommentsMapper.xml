@@ -24,7 +24,7 @@
             <if test="content != null">content,</if>
             <if test="userId != null">userId,</if>
             <if test="time != null">time,</if>
-            <if test="startDate != null">startDate,</if>
+            <if test="startDate != null">start_date,</if>
             <if test="money != null">money,</if>
             <if test="days != null">days,</if>
             <if test="location != null">location,</if>

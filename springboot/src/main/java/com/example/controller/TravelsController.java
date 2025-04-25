@@ -64,6 +64,11 @@ public class TravelsController {
         return Result.success(travels);
     }
 
+    @PutMapping("/updateReadCount/{id}")
+    public Result updateReadCount(@PathVariable Integer id) {
+        travelsService.updateReadCount(id);
+        return Result.success();
+    }
     /**
      * 查询所有
      */

@@ -45,6 +45,10 @@ public class TravelsService {
         return travelsMapper.selectById(id);
     }
 
+    public void updateReadCount(Integer id) {
+        travelsMapper.updateReadCount(id);
+    }
+
     public List<Travels> selectAll(Travels travels) {
         return travelsMapper.selectAll(travels);
     }
