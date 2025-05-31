@@ -20,7 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Date;
 
 /**
- * Token工具类
+ * Token Utility Class
  */
 @Component
 public class TokenUtils {
@@ -42,17 +42,17 @@ public class TokenUtils {
     }
 
     /**
-     * 生成JWT token
+     * Generate JWT token
      */
     public static String createToken(String data, String sign) {
-        // audience是存储数据的一个媒介  存储用户ID和用户的角色  1-ADMIN
+        // Audience is a medium for storing data, storing user IDs and user roles 1-ADMIN.
         return JWT.create().withAudience(data)
-                .withExpiresAt(DateUtil.offsetDay(new Date(), 1)) // 设置过期时间1天后
+                .withExpiresAt(DateUtil.offsetDay(new Date(), 1)) // Set the expiration time to 1 day later.
                 .sign(Algorithm.HMAC256(sign));
     }
 
     /**
-     * 获取当前登录的用户
+     * Get the currently logged-in user
      */
     public static Account getCurrentUser() {
         try {
@@ -68,7 +68,7 @@ public class TokenUtils {
                 return staticUserService.selectById(userId);
             }
         } catch (Exception e) {
-            log.error("获取当前登录用户出错", e);
+            log.error("Error getting the currently logged-in user", e);
         }
         return null;
     }

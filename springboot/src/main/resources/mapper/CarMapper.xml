@@ -8,6 +8,12 @@
         <where>
             <if test="name != null"> and name like concat('%', #{name}, '%')</if>
         </where>
+        <if test="sort == 'hot'">
+            order by car.num desc
+        </if>
+        <if test="sort == 'new'">
+            order by car.id desc
+        </if>
     </select>
 
     <delete id="deleteById">
@@ -27,6 +33,8 @@
             <if test="store != null">store,</if>
             <if test="specials != null">specials,</if>
             <if test="date != null">date,</if>
+            <if test="num != null">num,</if>
+            <if test="discount != null">discount,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -38,6 +46,8 @@
             <if test="store != null">#{store},</if>
             <if test="specials != null">#{specials},</if>
             <if test="date != null">#{date},</if>
+            <if test="num != null">#{num},</if>
+            <if test="discount != null">#{discount},</if>
         </trim>
     </insert>
 
@@ -67,6 +77,12 @@
             </if>
             <if test="date != null">
                 date = #{date},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="discount != null">
+                discount = #{discount},
             </if>
         </set>
         where id = #{id}

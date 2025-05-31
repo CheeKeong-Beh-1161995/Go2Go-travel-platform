@@ -22,4 +22,6 @@ public interface TravelsMapper {
 
     List<Travels> selectAll(Travels travels);
 
+    List<Travels> selectRecommend();
+
 }

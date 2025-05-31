@@ -1,16 +1,22 @@
 package com.example.controller;
 
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.example.common.Result;
 import com.example.entity.Orders;
 import com.example.service.OrdersService;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
- * 前端请求接口
+ * Frontend request interface
  */
 @RestController
 @RequestMapping("/orders")
@@ -20,7 +26,7 @@ public class OrdersController {
     private OrdersService ordersService;
 
     /**
-     * 新增
+     * Newly added
      */
     @PostMapping("/add")
     public Result add(@RequestBody Orders orders) {
@@ -29,7 +35,7 @@ public class OrdersController {
     }
 
     /**
-     * 修改
+     * Modify
      */
     @PutMapping("/update")
     public Result update(@RequestBody Orders orders) {
@@ -37,8 +43,15 @@ public class OrdersController {
         return Result.success();
     }
 
+    @PutMapping("/pay/batch")
+    public Result pay(@RequestBody List<Integer> ids) {
+        System.out.println(ids);
+        ordersService.payBatch(ids);
+        return Result.success();
+    }
+
     /**
-     * 单个删除
+     * Delete individually
      */
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable Integer id) {
@@ -47,7 +60,7 @@ public class OrdersController {
     }
 
     /**
-     * 批量删除
+     * Batch delete
      */
     @DeleteMapping("/delete/batch")
     public Result delete(@RequestBody List<Integer> ids) {
@@ -56,7 +69,7 @@ public class OrdersController {
     }
 
     /**
-     * 单个查询
+     * Single query
      */
     @GetMapping("/selectById/{id}")
     public Result selectById(@PathVariable Integer id) {
@@ -65,7 +78,7 @@ public class OrdersController {
     }
 
     /**
-     * 查询所有
+     * Query all
      */
     @GetMapping("/selectAll")
     public Result selectAll(Orders orders) {
@@ -74,7 +87,7 @@ public class OrdersController {
     }
 
     /**
-     * 分页查询
+     * Paged Query
      */
     @GetMapping("/selectPage")
     public Result selectPage(Orders orders,
@@ -82,6 +95,23 @@ public class OrdersController {
                              @RequestParam(defaultValue = "10") Integer pageSize) {
         PageInfo<Orders> pageInfo = ordersService.selectPage(orders, pageNum, pageSize);
         return Result.success(pageInfo);
+    }
+
+    /**
+     * Export data in batches
+     */
+    @GetMapping("/export")
+    public void exportData(HttpServletResponse response) throws IOException {
+        ExcelWriter excelWriter = ExcelUtil.getWriter(true);
+        List<Orders> list = ordersService.selectAll(new Orders());
+        excelWriter.write(list);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("TourismInformation", "UTF-8") + ".xlsx");
+        ServletOutputStream out = response.getOutputStream();
+        excelWriter.flush(out,true);
+        out.flush();
+        excelWriter.close();
+        out.close();
     }
 
 }

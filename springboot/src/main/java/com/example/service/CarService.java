@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 业务层方法
+ * Business-level methods
  */
 @Service
 public class CarService {

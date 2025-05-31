@@ -10,10 +10,7 @@ import com.example.entity.Account;
 import com.example.entity.Orders;
 import com.example.entity.Travels;
 import com.example.entity.User;
-import com.example.mapper.ArticleMapper;
-import com.example.mapper.OrdersMapper;
-import com.example.mapper.TourismMapper;
-import com.example.mapper.TravelsMapper;
+import com.example.mapper.*;
 import com.example.service.AdminService;
 import com.example.service.UserService;
 import jakarta.annotation.Resource;
@@ -113,12 +110,12 @@ public class WebController {
         Date date = new Date();
         DateTime start = DateUtil.offsetDay(date, -31);
         DateTime end = DateUtil.offsetDay(date, -1);
-        // 最近一个月的字符串日期集合 ["2024-09-25", "2024-09-26", ...]
+        // Collection of string dates for the last month ["2024-09-25", "2024-09-26", ...]
         List<String> dateList = DateUtil.rangeToList(start, end, DateField.DAY_OF_YEAR).stream().map(DateUtil::formatDate)
                 .sorted(Comparator.naturalOrder()).toList();
         List<Orders> ordersList = ordersMapper.selectAll(null);
         for (String day : dateList) {
-            // 计算出每一天的销售数量
+            // Calculate the sales quantity for each day
             Integer ordersNum = ordersList.stream().filter(orders -> orders.getTime().contains(day))  // 这里的日期是订单的下单日期
                     .map(Orders::getNum).reduce(Integer::sum).orElse(0);
             Dict dict = Dict.create().set("name", day).set("value", ordersNum);
@@ -134,12 +131,12 @@ public class WebController {
         Date date = new Date();
         DateTime start = DateUtil.offsetDay(date, -31);
         DateTime end = DateUtil.offsetDay(date, -1);
-        // 最近一个月的字符串日期集合 ["2024-09-25", "2024-09-26", ...]
+        // Collection of string dates for the last month ["2024-09-25", "2024-09-26", ...]
         List<String> dateList = DateUtil.rangeToList(start, end, DateField.DAY_OF_YEAR).stream().map(DateUtil::formatDate)
                 .sorted(Comparator.naturalOrder()).toList();
         List<Travels> travelsList = travelsMapper.selectAll(null);
         for (String day : dateList) {
-            // 计算出每一天的销售额
+            // Calculate the sales quantity for each day
             long count = travelsList.stream().filter(travels -> travels.getTime().contains(day)).count();
             Dict dict = Dict.create().set("name", day).set("value", count);
             dictList.add(dict);

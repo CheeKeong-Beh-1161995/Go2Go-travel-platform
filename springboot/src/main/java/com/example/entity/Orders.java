@@ -16,6 +16,15 @@ public class Orders {
     private String payNo;
     private String payTime;
     private String status;
+    private String start;
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
 
     public Integer getId() {
         return id;

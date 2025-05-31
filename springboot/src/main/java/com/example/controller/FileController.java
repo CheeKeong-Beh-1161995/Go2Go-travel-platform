@@ -41,10 +41,10 @@ public class FileController {
             }
             fileName = System.currentTimeMillis() + "-" + fileName;
             String realFilePath = filePath + fileName;
-            // 文件存储形式：时间戳-文件名
+            // File storage format: timestamp-filename
             FileUtil.writeBytes(file.getBytes(), realFilePath);
         } catch (Exception e) {
-            log.error(fileName + "--文件上传失败", e);
+            log.error(fileName + "--File upload failed.", e);
         }
         String url = fileBaseUrl + "/files/download/" + fileName;
         return Result.success(url);
@@ -67,7 +67,7 @@ public class FileController {
                 os.close();
             }
         } catch (Exception e) {
-            log.warn("文件下载失败：" + fileName);
+            log.warn("File download failed：" + fileName);
         }
     }
 
@@ -79,16 +79,16 @@ public class FileController {
         String flag = System.currentTimeMillis() + "";
         String fileName = file.getOriginalFilename();
         try {
-            // 文件存储形式：时间戳-文件名
+            // File storage format: timestamp-filename
             FileUtil.writeBytes(file.getBytes(), filePath + flag + "-" + fileName);
-            System.out.println(fileName + "--上传成功");
+            System.out.println(fileName + "--Upload successful");
             Thread.sleep(1L);
         } catch (Exception e) {
-            System.err.println(fileName + "--文件上传失败");
+            System.err.println(fileName + "--File upload failed");
         }
         String http = fileBaseUrl + "/files/download/";
         Map<String, Object> resMap = new HashMap<>();
-        // wangEditor上传图片成功后， 需要返回的参数
+        // Parameters to be returned after the successful image upload in wangEditor
         resMap.put("errno", 0);
         resMap.put("data", CollUtil.newArrayList(Dict.create().set("url", http + flag + "-" + fileName)));
         return resMap;

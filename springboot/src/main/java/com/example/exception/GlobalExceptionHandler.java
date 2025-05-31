@@ -13,16 +13,16 @@ public class GlobalExceptionHandler {
     private static final Log log = LogFactory.get();
 
     @ExceptionHandler(Exception.class)
-    @ResponseBody // 返回json串
+    @ResponseBody // Return JSON string
     public Result error(Exception e) {
-        log.error("异常信息：", e);
+        log.error("Error message：", e);
         return Result.error();
     }
 
     @ExceptionHandler(CustomException.class)
-    @ResponseBody // 返回json串
+    @ResponseBody // Return JSON string
     public Result error(CustomException e) {
-//        log.error("异常信息：", e);
+//        log.error("Error message：", e);
         return Result.error(e.getCode(), e.getMsg());
     }
 }

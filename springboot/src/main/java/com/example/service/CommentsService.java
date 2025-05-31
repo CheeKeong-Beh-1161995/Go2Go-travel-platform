@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 业务层方法
+ * Business-level methods
  */
 @Service
 public class CommentsService {
@@ -24,7 +24,16 @@ public class CommentsService {
 
     public void add(Comments comments) {
         comments.setTime(DateUtil.now());
+        Account currentUser = TokenUtils.getCurrentUser();
+        comments.setUserId(currentUser.getId());
         commentsMapper.insert(comments);
+        if (comments.getPid() != null) {
+            Comments parentComment = this.selectById(comments.getPid());
+            comments.setRootId(parentComment.getRootId());
+        }else {
+            comments.setRootId(comments.getId());
+        }
+        this.updateById(comments);
     }
 
     public void updateById(Comments comments) {
@@ -50,12 +59,22 @@ public class CommentsService {
     }
 
     public PageInfo<Comments> selectPage(Comments comments, Integer pageNum, Integer pageSize) {
-        Account account = TokenUtils.getCurrentUser();
-        if (RoleEnum.USER.name().equals(account.getRole())) {
-            comments.setStatus("通过");
-        }
         PageHelper.startPage(pageNum, pageSize);
         List<Comments> list = commentsMapper.selectAll(comments);
+        return PageInfo.of(list);
+    }
+
+    public Integer selectCount(Integer fid, String module) {
+        return commentsMapper.selectCount(fid,module);
+    }
+
+    public PageInfo<Comments> selectTree(Comments comment, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Comments> list = commentsMapper.selectRoot(comment);  // 查询一级节点
+        for (Comments root : list) {
+            List<Comments> children = commentsMapper.selectByRootId(root.getId());
+            root.setChildren(children);
+        }
         return PageInfo.of(list);
     }
 

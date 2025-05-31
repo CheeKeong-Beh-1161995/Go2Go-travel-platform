@@ -11,11 +11,15 @@ public interface OrdersMapper {
 
     void updateById(Orders orders);
 
+    void payById(Integer id);
+
     void deleteById(Integer id);
 
 
     Orders selectById(Integer id);
 
     List<Orders> selectAll(Orders orders);
+
+
 
 }

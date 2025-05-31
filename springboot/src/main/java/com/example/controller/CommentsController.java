@@ -1,26 +1,32 @@
 package com.example.controller;
 
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.example.common.Result;
 import com.example.entity.Comments;
 import com.example.service.CommentsService;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
- * 前端请求接口
+ * Frontend request interface
  */
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/comment")
 public class CommentsController {
 
     @Resource
     private CommentsService commentsService;
 
     /**
-     * 新增
+     * Newly added
      */
     @PostMapping("/add")
     public Result add(@RequestBody Comments comments) {
@@ -29,7 +35,7 @@ public class CommentsController {
     }
 
     /**
-     * 修改
+     * Modify
      */
     @PutMapping("/update")
     public Result update(@RequestBody Comments comments) {
@@ -38,7 +44,7 @@ public class CommentsController {
     }
 
     /**
-     * 单个删除
+     * Delete individually
      */
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable Integer id) {
@@ -47,7 +53,7 @@ public class CommentsController {
     }
 
     /**
-     * 批量删除
+     * Batch delete
      */
     @DeleteMapping("/delete/batch")
     public Result delete(@RequestBody List<Integer> ids) {
@@ -56,7 +62,7 @@ public class CommentsController {
     }
 
     /**
-     * 单个查询
+     * Single query
      */
     @GetMapping("/selectById/{id}")
     public Result selectById(@PathVariable Integer id) {
@@ -65,7 +71,7 @@ public class CommentsController {
     }
 
     /**
-     * 查询所有
+     * Query all
      */
     @GetMapping("/selectAll")
     public Result selectAll(Comments comments) {
@@ -74,7 +80,7 @@ public class CommentsController {
     }
 
     /**
-     * 分页查询
+     * Paged Query
      */
     @GetMapping("/selectPage")
     public Result selectPage(Comments comments,
@@ -84,4 +90,33 @@ public class CommentsController {
         return Result.success(pageInfo);
     }
 
+    @GetMapping("/selectTree")
+    public Result selectTree(Comments comments,
+                             @RequestParam(defaultValue = "1")Integer pageNum,
+                             @RequestParam(defaultValue = "10") Integer pageSize) {
+        PageInfo<Comments> pageInfo = commentsService.selectTree(comments, pageNum, pageSize);
+        return Result.success(pageInfo);
+    }
+
+    @GetMapping("/selectCount/{fid}/{module}")
+    public Result selectCount(@PathVariable Integer fid ,@PathVariable String module) {
+        Integer count = commentsService.selectCount(fid,module);
+        return Result.success(count);
+    }
+    /**
+     * Export data in batches
+     */
+    @GetMapping("/export")
+    public void exportData(HttpServletResponse response) throws IOException {
+        ExcelWriter excelWriter = ExcelUtil.getWriter(true);
+        List<Comments> list = commentsService.selectAll(null);
+        excelWriter.write(list);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("TourismInformation", "UTF-8") + ".xlsx");
+        ServletOutputStream out = response.getOutputStream();
+        excelWriter.flush(out,true);
+        out.flush();
+        excelWriter.close();
+        out.close();
+    }
 }

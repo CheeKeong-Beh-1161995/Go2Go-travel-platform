@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 业务层方法
+ * Business-level methods
  */
 @Service
 public class UserService {
@@ -69,7 +69,7 @@ public class UserService {
     }
 
     /**
-     * 登录
+     * Login
      */
     public User login(Account account) {
         User dbUser = userMapper.selectByUsername(account.getUsername());
@@ -86,7 +86,7 @@ public class UserService {
     }
 
     /**
-     * 修改密码
+     * Change password
      */
     public void updatePassword(Account account) {
         User dbUser = userMapper.selectByUsername(account.getUsername());

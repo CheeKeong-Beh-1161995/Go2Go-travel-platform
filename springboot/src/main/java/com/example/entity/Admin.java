@@ -2,9 +2,7 @@ package com.example.entity;
 
 public class Admin extends Account {
 
-    /** 主键ID */
     private Integer id;
-    /** 账号 */
     private String username;
     private String password;
     private String name;

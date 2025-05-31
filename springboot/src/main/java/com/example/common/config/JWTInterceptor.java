@@ -32,13 +32,13 @@ public class JWTInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // 1. 从http请求标头里面拿到token
+        // 1. Obtain the token from the HTTP request headers.
         String token = request.getHeader(Constants.TOKEN);
         if (ObjectUtil.isNull(token)) {
-            // 如果没拿到，那么再从请求参数里拿一次
+            // If it wasn't obtained, then take it again from the request parameters.
             request.getParameter(Constants.TOKEN);
         }
-        // 2. 开始执行认证
+        // 2. Start executing the certification
         if (ObjectUtil.isNull(token)) {
             throw new CustomException(ResultCodeEnum.TOKEN_INVALID_ERROR);
         }
@@ -47,7 +47,7 @@ public class JWTInterceptor implements HandlerInterceptor {
             String audience = JWT.decode(token).getAudience().get(0);
             String userId = audience.split("-")[0];
             String role = audience.split("-")[1];
-            // 根据用户角色判断用户属于哪个数据库表 然后查询用户数据
+            // Determine which database table the user belongs to based on the user role, and then query the user data.
             if (RoleEnum.ADMIN.name().equals(role)) {
                 account = adminService.selectById(Integer.valueOf(userId));
             } else if (RoleEnum.USER.name().equals(role)) {
@@ -56,17 +56,17 @@ public class JWTInterceptor implements HandlerInterceptor {
         } catch (Exception e) {
             throw new CustomException(ResultCodeEnum.TOKEN_CHECK_ERROR);
         }
-        // 根据token里面携带的用户ID去对应的角色表查询  没查到 所有报了这个“用户不存在”错误
+        // According to the user ID carried in the token, query the corresponding role table. If not found, an 'user does not exist' error will be reported.
         if (ObjectUtil.isNull(account)) {
-            // 用户不存在
+            // User does not exist
             throw new CustomException(ResultCodeEnum.TOKEN_CHECK_ERROR);
         }
         try {
-            // 通过用户的密码作为密钥再次验证token的合法性
+            // Verify the legality of the token again using the user's password as the key.
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(account.getPassword())).build();
             jwtVerifier.verify(token);  // 验证token
         } catch (JWTVerificationException e) {
-            // 用户不存在
+            // User does not exist
             throw new CustomException(ResultCodeEnum.TOKEN_CHECK_ERROR);
         }
         return true;

@@ -1,18 +1,36 @@
 package com.example.entity;
 
+import java.util.List;
+
 public class Comments {
     private Integer id;
-    private String title;
-    private String descr;
     private String content;
-    private String time;
     private Integer userId;
-    private String startDate;
-    private String Money;
-    private Integer days;
-    private String status;
-    private String location;
+    private Integer pid;
+    private String time;
+    private Integer fid;
+    private String module;
+    private Integer rootId;
     private String userName;
+    private String userAvatar;
+    private String parentUserName;
+    private List<Comments> children;
+
+    public List<Comments> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Comments> children) {
+        this.children = children;
+    }
+
+    public String getParentUserName() {
+        return parentUserName;
+    }
+
+    public void setParentUserName(String parentUserName) {
+        this.parentUserName = parentUserName;
+    }
 
     public String getUserName() {
         return userName;
@@ -20,6 +38,14 @@ public class Comments {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
     }
 
     public Integer getId() {
@@ -30,36 +56,12 @@ public class Comments {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescr() {
-        return descr;
-    }
-
-    public void setDescr(String descr) {
-        this.descr = descr;
-    }
-
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public Integer getUserId() {
@@ -70,43 +72,43 @@ public class Comments {
         this.userId = userId;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public Integer getPid() {
+        return pid;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setPid(Integer pid) {
+        this.pid = pid;
     }
 
-    public String getMoney() {
-        return Money;
+    public String getTime() {
+        return time;
     }
 
-    public void setMoney(String money) {
-        Money = money;
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    public Integer getDays() {
-        return days;
+    public Integer getFid() {
+        return fid;
     }
 
-    public void setDays(Integer days) {
-        this.days = days;
+    public void setFid(Integer fid) {
+        this.fid = fid;
     }
 
-    public String getStatus() {
-        return status;
+    public String getModule() {
+        return module;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setModule(String module) {
+        this.module = module;
     }
 
-    public String getLocation() {
-        return location;
+    public Integer getRootId() {
+        return rootId;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setRootId(Integer rootId) {
+        this.rootId = rootId;
     }
 }

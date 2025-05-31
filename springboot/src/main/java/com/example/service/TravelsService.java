@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 业务层方法
+ * Business-level methods
  */
 @Service
 public class TravelsService {
@@ -23,7 +23,12 @@ public class TravelsService {
     private TravelsMapper travelsMapper;
 
     public void add(Travels travels) {
+        Account currentUser = TokenUtils.getCurrentUser();
         travels.setTime(DateUtil.now());
+        travels.setStatus("通过");
+        travels.setUserId(currentUser.getId());
+        travels.setUserName(currentUser.getUsername());
+        travels.setReadCount(0);
         travelsMapper.insert(travels);
     }
 
@@ -61,6 +66,10 @@ public class TravelsService {
         PageHelper.startPage(pageNum, pageSize);
         List<Travels> list = travelsMapper.selectAll(travels);
         return PageInfo.of(list);
+    }
+
+    public List<Travels> selectRecommend() {
+        return travelsMapper.selectRecommend();
     }
 
 }

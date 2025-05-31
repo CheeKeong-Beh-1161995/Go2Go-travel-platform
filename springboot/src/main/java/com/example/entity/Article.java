@@ -8,6 +8,15 @@ public class Article {
     private String content;
     private Integer readCount;
     private String date;
+    private Integer collectCount;
+
+    public Integer getCollectCount() {
+        return collectCount;
+    }
+
+    public void setCollectCount(Integer collectCount) {
+        this.collectCount = collectCount;
+    }
 
     public Integer getId() {
         return id;

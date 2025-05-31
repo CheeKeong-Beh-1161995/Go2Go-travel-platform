@@ -3,8 +3,8 @@ package com.example.controller;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.example.common.Result;
-import com.example.entity.Travels;
-import com.example.service.TravelsService;
+import com.example.entity.Review;
+import com.example.service.ReviewService;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletOutputStream;
@@ -19,18 +19,18 @@ import java.util.List;
  * Frontend request interface
  */
 @RestController
-@RequestMapping("/travels")
-public class TravelsController {
+@RequestMapping("/review")
+public class ReviewController {
 
     @Resource
-    private TravelsService travelsService;
+    private ReviewService reviewService;
 
     /**
      * Newly added
      */
     @PostMapping("/add")
-    public Result add(@RequestBody Travels travels) {
-        travelsService.add(travels);
+    public Result add(@RequestBody Review review) {
+        reviewService.add(review);
         return Result.success();
     }
 
@@ -38,8 +38,8 @@ public class TravelsController {
      * Modify
      */
     @PutMapping("/update")
-    public Result update(@RequestBody Travels travels) {
-        travelsService.updateById(travels);
+    public Result update(@RequestBody Review review) {
+        reviewService.updateById(review);
         return Result.success();
     }
 
@@ -48,7 +48,7 @@ public class TravelsController {
      */
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable Integer id) {
-        travelsService.deleteById(id);
+        reviewService.deleteById(id);
         return Result.success();
     }
 
@@ -57,7 +57,7 @@ public class TravelsController {
      */
     @DeleteMapping("/delete/batch")
     public Result delete(@RequestBody List<Integer> ids) {
-        travelsService.deleteBatch(ids);
+        reviewService.deleteBatch(ids);
         return Result.success();
     }
 
@@ -66,21 +66,15 @@ public class TravelsController {
      */
     @GetMapping("/selectById/{id}")
     public Result selectById(@PathVariable Integer id) {
-        Travels travels = travelsService.selectById(id);
-        return Result.success(travels);
-    }
-
-    @PutMapping("/updateReadCount/{id}")
-    public Result updateReadCount(@PathVariable Integer id) {
-        travelsService.updateReadCount(id);
-        return Result.success();
+        Review review = reviewService.selectById(id);
+        return Result.success(review);
     }
     /**
      * Query all
      */
     @GetMapping("/selectAll")
-    public Result selectAll(Travels travels) {
-        List<Travels> list = travelsService.selectAll(travels);
+    public Result selectAll(Review review) {
+        List<Review> list = reviewService.selectAll(review);
         return Result.success(list);
     }
 
@@ -88,17 +82,11 @@ public class TravelsController {
      * Paged Query
      */
     @GetMapping("/selectPage")
-    public Result selectPage(Travels travels,
+    public Result selectPage(Review review,
                              @RequestParam(defaultValue = "1") Integer pageNum,
                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        PageInfo<Travels> pageInfo = travelsService.selectPage(travels, pageNum, pageSize);
+        PageInfo<Review> pageInfo = reviewService.selectPage(review, pageNum, pageSize);
         return Result.success(pageInfo);
-    }
-
-    @GetMapping("/selectRecommend")
-    public Result selectAll() {
-        List<Travels> list = travelsService.selectRecommend();
-        return Result.success(list);
     }
 
     /**
@@ -107,7 +95,7 @@ public class TravelsController {
     @GetMapping("/export")
     public void exportData(HttpServletResponse response) throws IOException {
         ExcelWriter excelWriter = ExcelUtil.getWriter(true);
-        List<Travels> list = travelsService.selectAll(null);
+        List<Review> list = reviewService.selectAll(null);
         excelWriter.write(list);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("TourismInformation", "UTF-8") + ".xlsx");

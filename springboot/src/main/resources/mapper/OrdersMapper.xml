@@ -30,6 +30,11 @@
         where  id = #{id}
     </delete>
 
+    <update id="payById">
+        update orders set status = "Completed"
+        where id = #{id}
+    </update>
+
     <insert id="insert" parameterType="com.example.entity.Orders" useGeneratedKeys="true" keyProperty="id">
         insert into orders
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -46,6 +51,7 @@
             <if test="payNo != null">pay_no,</if>
             <if test="payTime != null">pay_time,</if>
             <if test="status != null">status,</if>
+            <if test="start != null">start,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -61,6 +67,7 @@
             <if test="payNo != null">#{payNo},</if>
             <if test="payTime != null">#{payTime},</if>
             <if test="status != null">#{status},</if>
+            <if test="start != null">#{start},</if>
         </trim>
     </insert>
 
@@ -102,6 +109,9 @@
             </if>
             <if test="status != null">
                 status = #{status},
+            </if>
+            <if test="start != null">
+                start = #{start},
             </if>
         </set>
         where id = #{id}

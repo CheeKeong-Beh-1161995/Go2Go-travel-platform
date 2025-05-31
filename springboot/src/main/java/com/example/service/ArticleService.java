@@ -3,6 +3,7 @@ package com.example.service;
 import cn.hutool.core.date.DateUtil;
 import com.example.entity.Article;
 import com.example.mapper.ArticleMapper;
+import com.example.mapper.CollectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
@@ -15,6 +16,8 @@ public class ArticleService {
     
     @Resource
     private ArticleMapper articleMapper;
+    @Resource
+    private CollectMapper collectMapper;
 
     public void add(Article article) {
         article.setDate(DateUtil.now());
@@ -37,7 +40,10 @@ public class ArticleService {
     }
 
     public Article selectById(Integer id) {
-        return articleMapper.selectById(id);
+        Article article = articleMapper.selectById(id);
+        Integer count = collectMapper.selectByFid(article.getId());
+        article.setCollectCount(count);
+        return article;
     }
 
     public List<Article> selectAll(Article article) {
