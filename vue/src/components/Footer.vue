@@ -11,25 +11,25 @@
         <div><span class="org">38,000</span> travel product suppliers</div>
       </div>
       <div style="flex: 1; font-size: 12px; line-height: 25px">
-        <div style="font-size: 18px; margin-bottom: 20px">About Us</div>
-        <div>About Us Contact Us</div>
-        <div>Privacy Policy Trademark Statement</div>
-        <div>Service Agreement</div>
-        <div>Merchant Service Agreement</div>
-        <div>Notice for Infringement Complaints</div>
-        <div><span class="org">Travel Service Supervisor</span></div>
+        <div style="font-size: 18px; margin-bottom: 20px;"><a style="color: inherit" href="/front/about">About Us</a></div>
+        <div><a style="color: inherit" href="/front/about">Contact Us</a></div>
+        <div><a style="color: inherit" href="/front/about">Privacy Policy</a></div>
+<!--        <div><a style="color: inherit" href="/front/about">Trademark Statement</a></div>-->
+<!--        <div><a style="color: inherit" href="/front/about">Service Agreement</a></div>-->
+<!--        <div><span class="org"><a style="color: inherit" href="/front/about">Merchant Service Agreement</a></span></div>-->
       </div>
       <div style="flex: 1; font-size: 12px; line-height: 25px">
         <div style="font-size: 18px; margin-bottom: 20px">Travel Services</div>
-        <div>Travel Guides Hotel Reservations</div>
-        <div>Travel Deals Travel Q&A</div>
-        <div>Travel Tips Travel News</div>
-        <div><span class="org">Travel Mall Global Merchant Registration</span></div>
+        <div>Travel Guides</div>
+        <div>Hotel Reservations</div>
+        <div>Travel Deals</div>
+        <div>Travel Tips</div>
+        <div><span class="org">Travel Q&A</span></div>
       </div>
       <div style="flex: 1; text-align: center; padding-top: 20px; font-size: 20px;">
         <img src="@/assets/imgs/logo.png" alt="" style="width: 50px; margin-bottom: 10px">
         <div style="margin-bottom: 10px">Plan your trip with Go2Go!</div>
-        <div>TEL：1234567</div>
+        <div>TEL：09-2891111</div>
       </div>
     </div>
   </div>

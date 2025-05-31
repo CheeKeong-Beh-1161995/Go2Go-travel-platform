@@ -8,6 +8,7 @@
     <div class="card" style="margin-bottom: 5px">
       <el-button type="primary" plain @click="handleAdd">Add</el-button>
       <el-button type="danger" plain @click="delBatch">Batch Delete</el-button>
+      <el-button type="info" plain @click="handleExport">Export Excel</el-button>
     </div>
 
     <div class="card" style="margin-bottom: 5px">
@@ -52,8 +53,8 @@
       </template>
     </el-dialog>
 
-    <el-dialog title="Travel Route Information" v-model="data.formVisible" width="40%" destroy-on-close>
-      <el-form ref="form" :model="data.form" label-width="70px" style="padding: 20px">
+    <el-dialog title="Travel Route Information" v-model="data.formVisible" width="60%" destroy-on-close>
+      <el-form ref="form" :model="data.form" label-width="170px" style="padding: 20px">
         <el-form-item prop="name" label="Route Name">
           <el-input v-model="data.form.name" placeholder="Enter the name of the route"></el-input>
         </el-form-item>
@@ -123,6 +124,28 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import {onBeforeUnmount, ref, shallowRef} from "vue";
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@/assets/css/wangeditor.css'
+import { i18nChangeLanguage } from '@wangeditor/editor'
+
+
+const handleExport = async () => {
+  request.get('/routes/export',{
+    responseType: 'blob'
+  }).then(res => {
+    const blob = new Blob([res], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'RoutesInformation.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  })
+};
+
+i18nChangeLanguage('en')
 
 const data = reactive({
   user: JSON.parse(localStorage.getItem('xm-user')),
@@ -216,7 +239,10 @@ const save = () => {
   data.form.id ? update() : add()
 }
 const del = (id) => {
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning' }).then(res => {
     request.delete('/routes/delete/' + id).then(res => {
       if (res.code === '200') {
         ElMessage.success("Deleted successfully")
@@ -234,7 +260,10 @@ const delBatch = () => {
     ElMessage.warning("Please select data")
     return
   }
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning' }).then(res => {
     request.delete("/routes/delete/batch", {data: data.ids}).then(res => {
       if (res.code === '200') {
         ElMessage.success('Operation successful')

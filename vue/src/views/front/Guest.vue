@@ -15,7 +15,7 @@
           <div class="col-md-4" v-for="option in supportOptions" :key="option.id">
             <div class="support-card" @click="scrollToSection(option.target)">
               <div class="icon-wrapper">
-                <i :class="option.icon"></i>
+                <img :src= option.icon>
               </div>
               <h3>{{ option.title }}</h3>
               <p>{{ option.description }}</p>
@@ -54,33 +54,12 @@
         </div>
 
         <div class="faq-accordion">
-          <div
-              class="faq-item"
-              v-for="(faq, index) in filteredFAQs"
-              :key="faq.id"
-              :class="{ active: activeFAQ === index }"
-          >
+          <div class="faq-item" v-for="(faq, index) in filteredFAQs" :key="faq.id" :class="{ active: activeFAQ === index }">
             <div class="faq-question" @click="toggleFAQ(index)">
               <h3>{{ faq.question }}</h3>
-              <i :class="['fas', activeFAQ === index ? 'fa-minus' : 'fa-plus']"></i>
             </div>
-            <div class="faq-answer" v-show="activeFAQ === index">
+            <div @click="toggleFAQ(index)">
               <p>{{ faq.answer }}</p>
-              <div class="faq-helpful" v-if="faq.helpful">
-                <span>Was this answer helpful?</span>
-                <button
-                    @click="rateFAQ(faq.id, 'yes')"
-                    :class="{ active: faqFeedback[faq.id] === 'yes' }"
-                >
-                  <i class="far fa-thumbs-up"></i> Yes
-                </button>
-                <button
-                    @click="rateFAQ(faq.id, 'no')"
-                    :class="{ active: faqFeedback[faq.id] === 'no' }"
-                >
-                  <i class="far fa-thumbs-down"></i> No
-                </button>
-              </div>
             </div>
           </div>
 
@@ -94,178 +73,79 @@
         </div>
       </div>
     </section>
+<!--    &lt;!&ndash; Frequently Asked Questions &ndash;&gt;-->
+<!--    <section class="faq-section" id="faq" ref="faqSection">-->
+<!--      <div class="container">-->
+<!--        <div class="section-header">-->
+<!--          <h2>Frequently Asked Questions</h2>-->
+<!--          <div class="search-box">-->
+<!--            <input-->
+<!--                type="text"-->
+<!--                placeholder="Search questions..."-->
+<!--                v-model="searchQuery"-->
+<!--                @input="filterFAQs"-->
+<!--            >-->
+<!--            <i class="fas fa-search"></i>-->
+<!--          </div>-->
+<!--        </div>-->
 
-    <!-- Contact Support -->
-    <section class="contact-support" id="contact" ref="contactSection">
-      <div class="container">
-        <h2>Contact Support</h2>
-        <div class="row">
-          <div class="col-md-6">
-            <form @submit.prevent="submitSupportRequest">
-              <div class="form-group">
-                <label for="support-subject">Issue Type</label>
-                <select
-                    id="support-subject"
-                    class="form-control"
-                    v-model="supportRequest.subject"
-                    required
-                >
-                  <option value="" disabled selected>Select issue type</option>
-                  <option
-                      v-for="type in supportTypes"
-                      :value="type.value"
-                      :key="type.value"
-                  >
-                    {{ type.label }}
-                  </option>
-                </select>
-              </div>
+<!--        <div class="faq-categories">-->
+<!--          <button-->
+<!--              v-for="category in categories"-->
+<!--              :key="category.id"-->
+<!--              :class="{ active: activeCategory === category.id }"-->
+<!--              @click="filterByCategory(category.id)"-->
+<!--          >-->
+<!--            {{ category.name }}-->
+<!--          </button>-->
+<!--        </div>-->
 
-              <div class="form-group">
-                <label for="support-name">Name</label>
-                <input
-                    type="text"
-                    id="support-name"
-                    class="form-control"
-                    v-model="supportRequest.name"
-                    required
-                >
-              </div>
+<!--        <div class="faq-accordion">-->
+<!--          <div class="faq-item" v-for="(faq, index) in filteredFAQs" :key="faq.id" :class="{ active: activeFAQ === index }">-->
+<!--            <div class="faq-question" @click="toggleFAQ(index)">-->
+<!--              <h3>{{ faq.question }}</h3>-->
+<!--              <i :class="['fas', activeFAQ === index ? 'fa-minus' : 'fa-plus']"></i>-->
+<!--            </div>-->
+<!--            <div class="faq-answer" v-show="activeFAQ === index">-->
+<!--              <p>{{ faq.answer }}</p>-->
+<!--              <div class="faq-helpful" v-if="faq.helpful">-->
+<!--                <span>Was this answer helpful?</span>-->
+<!--                <button-->
+<!--                    @click="rateFAQ(faq.id, 'yes')"-->
+<!--                    :class="{ active: faqFeedback[faq.id] === 'yes' }"-->
+<!--                >-->
+<!--                  <i class="far fa-thumbs-up"></i> Yes-->
+<!--                </button>-->
+<!--                <button-->
+<!--                    @click="rateFAQ(faq.id, 'no')"-->
+<!--                    :class="{ active: faqFeedback[faq.id] === 'no' }"-->
+<!--                >-->
+<!--                  <i class="far fa-thumbs-down"></i> No-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
 
-              <div class="form-group">
-                <label for="support-email">Email</label>
-                <input
-                    type="email"
-                    id="support-email"
-                    class="form-control"
-                    v-model="supportRequest.email"
-                    required
-                >
-              </div>
+<!--          <div class="no-results" v-if="filteredFAQs.length === 0">-->
+<!--            <i class="far fa-frown"></i>-->
+<!--            <p>No relevant questions found</p>-->
+<!--            <button class="btn-contact" @click="scrollToSection('contact')">-->
+<!--              Contact Support-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </section>-->
 
-              <div class="form-group">
-                <label for="support-order">Order Number (Optional)</label>
-                <input
-                    type="text"
-                    id="support-order"
-                    class="form-control"
-                    v-model="supportRequest.orderNumber"
-                >
-              </div>
 
-              <div class="form-group">
-                <label for="support-message">Detailed Description</label>
-                <textarea
-                    id="support-message"
-                    class="form-control"
-                    rows="5"
-                    v-model="supportRequest.message"
-                    required
-                ></textarea>
-              </div>
-
-              <div class="form-group">
-                <label for="support-attachments">Add Attachments</label>
-                <input
-                    type="file"
-                    id="support-attachments"
-                    class="form-control"
-                    multiple
-                    @change="handleFileUpload"
-                >
-                <div class="file-preview" v-if="supportRequest.attachments.length > 0">
-                  <div
-                      class="file-item"
-                      v-for="(file, index) in supportRequest.attachments"
-                      :key="index"
-                  >
-                    <span>{{ file.name }}</span>
-                    <button @click="removeAttachment(index)">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <button type="submit" class="btn-submit" :disabled="isSubmitting">
-                <span v-if="!isSubmitting">Submit Request</span>
-                <span v-else>Submitting...</span>
-              </button>
-            </form>
-          </div>
-
-          <div class="col-md-6">
-            <div class="contact-methods">
-              <div class="contact-card">
-                <div class="icon-wrapper">
-                  <i class="fas fa-phone-alt"></i>
-                </div>
-                <h3>Phone Support</h3>
-                <p>24/7 Available</p>
-                <a :href="`tel:${contactInfo.phone}`" class="contact-link">
-                  {{ contactInfo.phone }}
-                </a>
-              </div>
-
-              <div class="contact-card">
-                <div class="icon-wrapper">
-                  <i class="fas fa-comment-dots"></i>
-                </div>
-                <h3>Live Chat</h3>
-                <p>Quick Response</p>
-                <button class="contact-link" @click="openLiveChat">
-                  Start Chat
-                </button>
-              </div>
-
-              <div class="contact-card">
-                <div class="icon-wrapper">
-                  <i class="fas fa-envelope"></i>
-                </div>
-                <h3>Email</h3>
-                <p>Response within 24 hours</p>
-                <a :href="`mailto:${contactInfo.email}`" class="contact-link">
-                  {{ contactInfo.email }}
-                </a>
-              </div>
-            </div>
-
-            <div class="response-time">
-              <h4>Estimated Response Time</h4>
-              <div class="time-item" v-for="item in responseTimes" :key="item.method">
-                <span class="method">{{ item.method }}</span>
-                <span class="time">{{ item.time }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Support Status Check -->
-    <section class="status-check" v-if="hasOpenTickets">
-      <div class="container">
-        <div class="status-card">
-          <h3>Check Your Support Request Status</h3>
-          <p>Enter your request number to check the latest status</p>
-          <div class="status-form">
-            <input
-                type="text"
-                placeholder="Enter request number"
-                v-model="ticketNumber"
-            >
-            <button @click="checkTicketStatus">
-              <i class="fas fa-search"></i> Search
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 
 <script>
 import { ref, reactive, computed, onMounted } from 'vue';
+import icon1 from "@/assets/imgs/avatar.png"
+import icon2 from "@/assets/imgs/avatar.png"
+import icon3 from "@/assets/imgs/avatar.png"
 
 export default {
   name: 'Support',
@@ -274,21 +154,21 @@ export default {
     const supportOptions = ref([
       {
         id: 1,
-        icon: 'far fa-question-circle',
+        icon: icon1,
         title: 'FAQs',
         description: 'Browse our frequently asked questions',
         target: 'faq'
       },
       {
         id: 2,
-        icon: 'far fa-envelope',
+        icon: icon2,
         title: 'Contact Us',
         description: 'Reach us via email or form',
         target: 'contact'
       },
       {
         id: 3,
-        icon: 'far fa-comments',
+        icon: icon3,
         title: 'Live Chat',
         description: 'Chat with our support team in real-time',
         target: 'chat'
@@ -301,17 +181,104 @@ export default {
         id: 1,
         category: 'booking',
         question: 'How to book a travel product?',
-        answer: 'You can select your desired travel product through our website or app, fill in the necessary information and complete the payment to finish the booking. After successful booking, you will receive a confirmation email.',
+        answer: 'To book a product, simply follow these steps:\n' +
+            '1. Browse or search for your desired travel service.\n' +
+            '2. Select your preferred date, time, and options.\n' +
+            '3. Click "Book Now" and fill in your details.\n' +
+            '4. Make payment securely through our platform.\n' +
+            '5. You’ll receive a confirmation email shortly after\n',
         helpful: true
       },
       {
         id: 2,
-        category: 'payment',
-        question: 'What payment methods are supported?',
-        answer: 'We support various payment methods including credit cards (Visa, MasterCard), Alipay, WeChat Pay, UnionPay online payment, etc.',
+        category: 'booking',
+        question: 'Can I make a booking without creating an account?',
+        answer: 'No, we are recommend creating an account to manage your bookings, track history, and access exclusive offers.',
         helpful: true
       },
-      // More FAQs...
+      {
+        id: 3,
+        category: 'booking',
+        question: 'I didn\'t receive my booking confirmation — what should I do?',
+        answer: 'Please check your spam/junk folder. If it\'s not there, contact our support team with your full name and booking details. We’ll resend it right away.\n',
+        helpful: true
+      },
+      {
+        id: 4,
+        category: 'booking',
+        question: 'Is it necessary to book in advance?',
+        answer: 'We recommend booking early, especially during peak travel seasons, to secure availability and the best rates.',
+        helpful: true
+      },
+      {
+        id: 5,
+        category: 'payment',
+        question: 'What payment methods are supported?',
+        answer: 'We accept major credit and debit cards (Visa, Mastercard), PayPal, and selected local payment options depending on your region.',
+        helpful: true
+      },
+      {
+        id: 6,
+        category: 'payment',
+        question: 'Will I receive a receipt or invoice?',
+        answer: 'Yes. A confirmation email with your booking details and an invoice will be sent to you after payment is completed.\n',
+        helpful: true
+      },
+      {
+        id: 7,
+        category: 'payment',
+        question: 'I was charged twice — what should I do?',
+        answer: 'Please contact us with a screenshot of your bank statement and booking reference. We will verify and process a refund if duplicate payment is confirmed.',
+        helpful: true
+      },
+      {
+        id: 8,
+        category: 'cancellation',
+        question: 'Can I cancel my booking?',
+        answer: 'Yes, cancellations are allowed depending on the provider’s policy. Please check the cancellation terms listed on the product page.',
+        helpful: true
+      },
+      {
+        id: 9,
+        category: 'cancellation',
+        question: 'How do I cancel my booking?',
+        answer: 'Log in to your account, go to “My Bookings,” and select “Cancel.” Or contact our customer service team to help process your request.',
+        helpful: true
+      },
+      {
+        id: 10,
+        category: 'cancellation',
+        question: 'When will I get my refund?',
+        answer: 'Refunds are typically processed within 5–10 business days, depending on your bank or payment provider.',
+        helpful: true
+      },
+      {
+        id: 11,
+        category: 'account',
+        question: 'How do I create an account?',
+        answer: 'Click on the “Register” button at the top-right corner of the page. Fill in your all details and submit your account.\n',
+        helpful: true
+      },
+      {
+        id: 12,
+        category: 'account',
+        question: 'I forgot my password — how can I reset it?',
+        answer: 'If you forgot your password, follow these steps to reset it:\n' +
+            '1. Go to the login page and click “Forgot Password?”\n' +
+            '2. Enter your registered username.\n' +
+            '3. On the reset page (as shown), enter your new password and confirm it.\n' +
+            '4. Click “Save” to update your password.\n' +
+            'Make sure your new password includes a mix of letters, numbers, and symbols for security.\n' +
+            'If you still unable to reset your password, please contact our support team at support@go2gotravel.co.nz.',
+        helpful: true
+      },
+      {
+        id: 13,
+        category: 'account',
+        question: 'Can I update my personal information?',
+        answer: 'Yes. After logging in, go to “My Account” > “Profile Settings” to update your name, contact info, or password.',
+        helpful: true
+      },
     ]);
 
     // FAQ categories
@@ -383,7 +350,7 @@ export default {
     };
 
     const filterFAQs = () => {
-      let results = [...faqs.value];
+      let results = faqs.value;
 
       // Filter by category
       if (activeCategory.value !== 'all') {
@@ -557,7 +524,7 @@ export default {
         justify-content: center;
         margin-bottom: 20px;
 
-        i {
+        img {
           font-size: 1.5rem;
           color: #2196f3;
         }

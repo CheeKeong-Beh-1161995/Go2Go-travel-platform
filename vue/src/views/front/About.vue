@@ -17,7 +17,7 @@
             <p>{{ companyInfo.story }}</p>
           </div>
           <div class="col-md-6">
-            <img :src="companyInfo.storyImage" alt="Company Story" class="img-fluid rounded">
+            <img :src=img1 alt="">
           </div>
         </div>
       </div>
@@ -47,40 +47,68 @@
       </div>
     </section>
 
-    <!-- Team showcase -->
-    <section class="team-section">
-      <div class="container">
-        <h2 class="text-center">Our Team</h2>
-        <div class="row">
-          <div class="col-md-3" v-for="member in teamMembers" :key="member.id">
-            <div class="team-card">
-              <img :src="member.avatar" :alt="member.name" class="img-fluid">
-              <h4>{{ member.name }}</h4>
-              <p>{{ member.position }}</p>
-              <div class="social-links">
-                <a v-for="(link, platform) in member.social" :key="platform" :href="link" target="_blank">
-                  <i :class="`fab fa-${platform}`"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Statistics -->
     <section class="stats-section">
       <div class="container">
         <div class="row">
           <div class="col-md-3" v-for="stat in statistics" :key="stat.id">
             <div class="stat-item">
-              <h3><count-up :end-val="stat.value" :duration="2"></count-up>{{ stat.unit }}</h3>
+              <h3><count-up :end-val="stat.value" :duration="2"></count-up>{{stat.value}}{{ stat.unit }}</h3>
               <p>{{ stat.label }}</p>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- Legal Sections -->
+    <section class="legal-sections" style="margin-left: 20px">
+      <div class="container">
+        <!-- Privacy Policy -->
+        <div class="legal-card">
+          <h2>Privacy Policy</h2>
+          <p>Go2Go Travel Limited values your privacy. This policy explains how we collect, use, and protect your personal information when you interact with our services. We may collect your name, email address, phone number, booking details, and payment information when you use our website or contact us.</p>
+
+          <h4>1. How We Use Your Information</h4>
+          <ul>
+            <li>To process bookings and payments</li>
+            <li>To improve our services based on user feedback</li>
+            <li>To respond to inquiries or customer service requests</li>
+          </ul>
+
+          <h4>2. Third Parties</h4>
+          <p>We do not share your personal information with third parties except as required for payment processing or legal compliance.</p>
+
+          <h4>3. Contact Us</h4>
+          <p>If you have questions about this policy, please contact us at: support@go2gotravel.co.nz</p>
+        </div>
+
+        <!-- Trademark Statement -->
+        <div class="legal-card">
+          <h2>Trademark Statement</h2>
+          <p>All trademarks, logos, and service marks displayed on this site are the property of Go2Go Travel Limited unless otherwise stated. Unauthorised use of any content, logos, or trademarks is strictly prohibited.</p>
+        </div>
+
+        <!-- Merchant Service Agreement -->
+        <div class="legal-card">
+          <h2>Merchant Service Agreement</h2>
+          <p>This Merchant Service Agreement ("Agreement") is made between Go2Go Travel Limited and users ("Customers") of our booking platform.</p>
+
+          <h4>1. Services Offered</h4>
+          <p>We provide online quotation and booking services for tours, car rentals, and private transportation in New Zealand.</p>
+
+          <h4>2. Booking Confirmation and Payment</h4>
+          <p>Customers will receive a booking confirmation via email upon successful payment. Bookings are not guaranteed until full payment is received.</p>
+
+          <h4>3. Refund & Cancellation Policy</h4>
+          <p>Refunds are subject to the terms stated during booking. Cancellation fees may apply depending on the timing and type of service booked.</p>
+
+          <h4>4. Changes to Agreement</h4>
+          <p>Go2Go Travel reserves the right to modify this agreement. Any updates will be posted on our website.</p>
+        </div>
+      </div>
+    </section>
+
 
     <!-- Contact us -->
     <section class="contact-section">
@@ -125,20 +153,25 @@
 
 <script>
 import { ref, reactive, onMounted } from 'vue';
+import img1 from "@/assets/imgs/company.png"
 
 
 export default {
+  data() {
+    return {
+      img1
+    }
+  },
   name: 'About',
   setup() {
     // Company information
     const companyInfo = reactive({
       story: 'We were founded in 2015, initially as a small local travel service provider. After years of development, we have grown into a global travel platform covering more than 50 countries, providing millions of travelers with high-quality travel products and services.',
-      storyImage: '',
       mission: 'To provide unique, high-quality travel products and services for global travelers, making every journey an unforgettable experience.',
       vision: 'To become the world\'s leading travel platform, connecting travelers with quality service providers and creating more travel possibilities.',
-      address: '18F, Travel Building, Chaoyang District, Beijing',
-      phone: '400-123-4567',
-      email: 'contact@travelplatform.com',
+      address: '16 Victory street, Wellington, New Zealand',
+      phone: '09-2891111',
+      email: 'support@go2gotravel.co.nz',
       businessHours: {
         'Monday to Friday': '9:00 - 18:00',
         'Saturday': '10:00 - 16:00',
@@ -175,10 +208,9 @@ export default {
 
     // Statistics
     const statistics = ref([
-      { id: 1, value: 500, unit: 'K+', label: 'Satisfied Customers' },
       { id: 2, value: 50, unit: '+', label: 'Countries Covered' },
       { id: 3, value: 1000, unit: '+', label: 'Travel Products' },
-      { id: 4, value: 10, unit: 'Years', label: 'Industry Experience' }
+      { id: 4, value: 1, unit: 'Years', label: 'Industry Experience' }
     ]);
 
     // Contact form
@@ -219,6 +251,8 @@ export default {
   color: #333;
 
   .hero-banner {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url('https://example.com/images/support-banner.jpg');
     background-size: cover;
     background-position: center;
     color: white;
@@ -237,9 +271,20 @@ export default {
   }
 
   .company-intro, .mission-vision, .team-section, .stats-section, .contact-section {
-    padding: 80px 0;
+    padding: 10px 0;
+
+
+
+    p {
+      padding-left: 10px;
+    }
+
+    img {
+      padding-left: 10px;
+    }
 
     h2 {
+      padding-left: 10px;
       font-weight: bold;
       margin-bottom: 40px;
       position: relative;

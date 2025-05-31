@@ -44,12 +44,14 @@
               <span>Information Management</span>
             </template>
             <el-menu-item index="/manager/article">Travel Guide Information</el-menu-item>
-            <el-menu-item index="/manager/routes">Travel Route Information</el-menu-item>
-            <el-menu-item index="/manager/travels">Travel Diary Information</el-menu-item>
+<!--            <el-menu-item index="/manager/routes">Travel Route Information</el-menu-item>-->
+            <el-menu-item index="/manager/travels">Tours Review Information</el-menu-item>
             <el-menu-item index="/manager/tourism">Tourism Product Information</el-menu-item>
             <el-menu-item index="/manager/car">Car Product Information</el-menu-item>
             <el-menu-item index="/manager/comments">Comment Information</el-menu-item>
+            <el-menu-item index="/manager/review">Travel Blog Information</el-menu-item>
             <el-menu-item index="/manager/orders">User Order Information</el-menu-item>
+            <el-menu-item index="/manager/collect">Collect Information</el-menu-item>
             <el-menu-item index="/manager/notice">System Announcements</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2">
@@ -85,7 +87,7 @@ if (data.user.role !== 'ADMIN'){
 
 const logout = () => {
   localStorage.removeItem('xm-user')
-  router.push('/login')
+  router.push('/loginNav/adminLogin')
 }
 
 const updateUser = () => {

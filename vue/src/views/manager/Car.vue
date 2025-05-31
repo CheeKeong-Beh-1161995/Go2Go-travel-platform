@@ -8,6 +8,7 @@
     <div class="card" style="margin-bottom: 5px">
       <el-button type="primary" plain @click="handleAdd">Add</el-button>
       <el-button type="danger" plain @click="delBatch">Batch Delete</el-button>
+      <el-button type="info" plain @click="handleExport">Export Excel</el-button>
     </div>
 
     <div class="card" style="margin-bottom: 5px">
@@ -27,7 +28,8 @@
         </el-table-column>
         <el-table-column prop="price" label="Price"></el-table-column>
         <el-table-column prop="store" label="Stock"></el-table-column>
-        <el-table-column prop="specials" label="Features">
+        <el-table-column prop="discount" label="Discount" :formatter="ChangeToPercentage"></el-table-column>
+        <el-table-column prop="specials" label="Features" show-overflow-tooltip>
           <template #default="scope">
             <el-tag v-for="item in scope.row.specials" :key="item" style="margin-right: 5px; margin-bottom: 5px">{{ item }}</el-tag>
           </template>
@@ -68,6 +70,9 @@
         </el-form-item>
         <el-form-item label="Stock" prop="store">
           <el-input-number style="width: 200px" :min="1" v-model="data.form.store" placeholder="Stock"></el-input-number>
+        </el-form-item>
+        <el-form-item label="Discount" prop="discount">
+          <el-input-number style="width: 200px" :min="0.1" :max="1" :step="0.1" v-model="data.form.discount" placeholder="Discount"></el-input-number>
         </el-form-item>
         <el-form-item label="Features" prop="specials">
           <el-select multiple v-model="data.form.specials">
@@ -123,6 +128,32 @@ import {Delete, Edit} from "@element-plus/icons-vue";
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import {onBeforeUnmount, ref, shallowRef} from "vue";
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { i18nChangeLanguage } from '@wangeditor/editor'
+
+
+const handleExport = async () => {
+  request.get('/car/export',{
+    responseType: 'blob'
+  }).then(res => {
+    const blob = new Blob([res], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'CarInformation.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  })
+};
+
+const ChangeToPercentage = (row, column) => {
+  return (row[column.property]*100)+"%"
+}
+
+i18nChangeLanguage('en')
 
 const data = reactive({
   user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
@@ -137,6 +168,7 @@ const data = reactive({
   viewVisible: false,
   content: null
 })
+
 
 const view = (content) => {
   data.content = content
@@ -223,7 +255,10 @@ const save = () => {
   data.form.id ? update() : add()
 }
 const del = (id) => {
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning' }).then(res => {
     request.delete('/car/delete/' + id).then(res => {
       if (res.code === '200') {
         ElMessage.success("Deleted successfully")
@@ -241,7 +276,10 @@ const delBatch = () => {
     ElMessage.warning("Please select data")
     return
   }
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning' }).then(res => {
     request.delete("/car/delete/batch", {data: data.ids}).then(res => {
       if (res.code === '200') {
         ElMessage.success('Operation successful')

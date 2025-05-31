@@ -7,6 +7,7 @@
     </div>
     <div class="card" style="margin-bottom: 5px">
       <el-button type="danger" plain @click="delBatch">Batch Delete</el-button>
+      <el-button type="info" plain @click="handleExport">Export Excel</el-button>
     </div>
 
     <div class="card" style="margin-bottom: 5px">
@@ -74,6 +75,27 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import {onBeforeUnmount, ref, shallowRef} from "vue";
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@/assets/css/wangeditor.css'
+import { i18nChangeLanguage } from '@wangeditor/editor'
+
+const handleExport = async () => {
+  request.get('/travels/export',{
+    responseType: 'blob'
+  }).then(res => {
+    const blob = new Blob([res], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'TravelsInformation.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  })
+};
+
+i18nChangeLanguage('en')
 
 const data = reactive({
   user: JSON.parse(localStorage.getItem('xm-user')),
@@ -188,7 +210,10 @@ const save = () => {
 }
 
 const del = (id) => {
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning' }).then(res => {
     request.delete('/travels/delete/' + id).then(res => {
       if (res.code === '200') {
         ElMessage.success("Deleted successfully")
@@ -207,7 +232,10 @@ const delBatch = () => {
     ElMessage.warning("Please select data")
     return
   }
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning' }).then(res => {
     request.delete("/travels/delete/batch", {data: data.ids}).then(res => {
       if (res.code === '200') {
         ElMessage.success('Operation successful')

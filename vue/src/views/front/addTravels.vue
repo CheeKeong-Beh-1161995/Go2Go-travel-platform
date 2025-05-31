@@ -5,7 +5,7 @@
     </div>
     <div style="margin: 20px 0; text-align: center; font-size: 24px">Write a Travelogue</div>
     <div>
-      <el-form ref="form" :model="data.form" label-width="90px" style="padding: 20px" :rules="data.rules">
+      <el-form ref="form" :model="data.form" label-width="190px" style="padding: 20px" :rules="data.rules">
         <el-form-item prop="title" label="Title">
           <el-input v-model="data.form.title" placeholder="Please enter the title"></el-input>
         </el-form-item>
@@ -61,11 +61,14 @@
 <script setup>
 import router from "@/router/index.js";
 import { reactive } from "vue";
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import '@wangeditor/editor/dist/css/style.css' // Introduce CSS
 import {onBeforeUnmount, ref, shallowRef} from "vue";
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import request from "@/utils/request.js";
 import {ElMessage} from "element-plus";
+import { i18nChangeLanguage } from '@wangeditor/editor'
+
+i18nChangeLanguage('en')
 
 const data = reactive({
   id: router.currentRoute.value.query.id,
@@ -119,9 +122,7 @@ const add = () => {
       request.post('/travels/add', data.form).then(res => {
         if (res.code === '200') {
           ElMessage.success('Published successfully')
-          if (res.data.id) {
-            router.replace('/front/addTravel?id=' + res.data.id)
-          }
+          router.push('/front/article')
         } else {
           ElMessage.error(res.msg)
         }
@@ -132,7 +133,7 @@ const add = () => {
 
 const update = () => {
   form.value.validate((valid) => {
-    if (valid) {  // 表单校验通过
+    if (valid) {
       if (!data.form.content) {
         ElMessage.warning('Please enter the content')
         return
@@ -152,8 +153,8 @@ const handleFileUpload = (res) => {
   data.form.cover = res.data
 }
 
-/* wangEditor5 初始化开始 */
-const editorRef = shallowRef()  // 编辑器实例，必须用 shallowRef
+
+const editorRef = shallowRef()
 const mode = 'default'
 const editorConfig = { MENU_CONF: {} }
 // 图片上传配置
@@ -161,18 +162,18 @@ editorConfig.MENU_CONF['uploadImage'] = {
   headers: {
     token: data.user.token,
   },
-  server: baseUrl + '/files/wang/upload',  // 服务端图片上传接口
-  fieldName: 'file'  // 服务端图片上传接口参数
+  server: baseUrl + '/files/wang/upload',
+  fieldName: 'file'
 }
-// 组件销毁时，也及时销毁编辑器，否则可能会造成内存泄漏
+
 onBeforeUnmount(() => {
   const editor = editorRef.value
   if (editor == null) return
   editor.destroy()
 })
-// 记录 editor 实例，重要！
+
 const handleCreated = (editor) => {
   editorRef.value = editor
 }
-/* wangEditor5 初始化结束 */
+
 </script>

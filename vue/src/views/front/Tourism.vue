@@ -5,8 +5,8 @@
       <div style="display: flex; align-items: center; margin-bottom: 20px">
         <div style="flex: 1; padding-left: 10px; border-left: 5px solid orangered; font-size: 20px;">Hot Sales</div>
         <div style="width: fit-content; font-weight: bold">
-          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'hot' }">Hottest</span> |
-          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'new'}">Newest</span>
+          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'hot' }" @click="loadByHot">Hottest</span> |
+          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'new'}" @click="loadByNew">Newest</span>
         </div>
       </div>
 
@@ -17,7 +17,7 @@
             <div style="font-size: 16px; margin: 5px 0" class="line2 title">{{ item.name }}</div>
             <div style="display: flex; align-items: center">
               <div style="color: orange; font-size: 20px; font-weight: bold; flex: 1">$ {{ item.price }}</div>
-              <div style="color: #666">Sold: {{ item.orderNum }}</div>
+              <div style="color: #666">Sold: {{ item.num }}</div>
             </div>
           </el-col>
         </el-row>
@@ -51,6 +51,7 @@ const load = () => {
     params: {
       pageNum: data.pageNum,
       pageSize: data.pageSize,
+      sort: data.sort
     }
   }).then(res => {
     if (res.code === '200') {
@@ -60,6 +61,14 @@ const load = () => {
       router.push('/loginNav/login')
     }
   })
+}
+const loadByHot = () =>{
+  data.sort = 'hot';
+  load()
+}
+const loadByNew = () =>{
+  data.sort = 'new';
+  load()
 }
 load()
 </script>

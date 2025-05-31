@@ -17,10 +17,12 @@ const router = createRouter({
         { path: 'routes', meta: { name: 'Travel Routes' }, component: () => import('@/views/manager/Routes.vue'), },
         { path: 'travels', meta: { name: 'Travel Diaries' }, component: () => import('@/views/manager/Travels.vue'), },
         { path: 'comments', meta: { name: 'Comments' }, component: () => import('@/views/manager/Comments.vue'), },
+        { path: 'review', meta: { name: 'Review' }, component: () => import('@/views/manager/Review.vue'), },
         { path: 'user', meta: { name: 'User Information' }, component: () => import('@/views/manager/User.vue'), },
         { path: 'tourism', meta: { name: 'Tourism Products' }, component: () => import('@/views/manager/Tourism.vue'), },
         { path: 'car', meta: { name: 'Car Products' }, component: () => import('@/views/manager/Car.vue'), },
         { path: 'orders', meta: { name: 'Tourism Orders' }, component: () => import('@/views/manager/Orders.vue'), },
+        { path: 'collect', meta: { name: 'Collect Information' }, component: () => import('@/views/manager/Collect.vue'), },
       ]
     },
     {
@@ -29,7 +31,9 @@ const router = createRouter({
       children: [
         { path: 'home', component: () => import('@/views/front/Home.vue'),  },
         { path: 'home_login', component: () => import('@/views/front/Home_login.vue'),  },
-        { path: 'addComments', component: () => import('@/views/front/addComments.vue'),  },
+        { path: 'article', component: () => import('@/views/front/Article.vue'),  },
+        { path: 'articleDetail', component: () => import('@/views/front/ArticleDetail.vue'),  },
+        { path: 'addReview', component: () => import('@/views/front/addReview.vue'),  },
         { path: 'addTravels', component: () => import('@/views/front/addTravels.vue'),  },
         { path: 'person', component: () => import('@/views/front/Person.vue'), },
         { path: 'password', component: () => import('@/views/front/Password.vue'), },
@@ -41,7 +45,9 @@ const router = createRouter({
         { path: 'guest', component: () => import('@/views/front/Guest.vue'), },
         { path: 'car', component: () => import('@/views/front/Car.vue'), },
         { path: 'carDetail', component: () => import('@/views/front/CarDetail.vue'), },
-        { path: 'travelDetail', component: () => import('@/views/front/travelDetail.vue'), },
+        { path: 'travelDetail', component: () => import('@/views/front/TravelDetail.vue'), },
+        { path: 'collect', component: () => import('@/views/front/Collect.vue'), },
+        { path: 'reviewDetail', component: () => import('@/views/front/ReviewDetail.vue'),  },
       ]
     },
     {
@@ -54,7 +60,6 @@ const router = createRouter({
         { path: 'forgetPassword', component: () => import('@/views/ForgetPassword.vue') },
       ]
     },
-
     { path: '/404', component: () => import('@/views/404.vue') },
     { path: '/:pathMatch(.*)', redirect: '/404' }
   ]

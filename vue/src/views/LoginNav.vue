@@ -54,7 +54,11 @@ const logout = () => {
   router.push('/loginNav/login')
 }
 const goPage = (path) => {
-  location.href = path
+  if (!data.user.id){
+    location.href = '/loginNav/login'
+  }else {
+    location.href = path
+  }
 }
 
 const updateUser = () => {

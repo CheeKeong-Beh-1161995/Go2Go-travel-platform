@@ -8,6 +8,7 @@
     <div class="card" style="margin-bottom: 5px">
       <el-button type="primary" plain @click="handleAdd">Add</el-button>
       <el-button type="danger" plain @click="delBatch">Batch Delete</el-button>
+      <el-button type="info" plain @click="handleExport">Export Excel</el-button>
     </div>
 
     <div class="card" style="margin-bottom: 5px">
@@ -74,6 +75,24 @@ import { reactive } from "vue";
 import request from "@/utils/request.js";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Delete, Edit } from "@element-plus/icons-vue";
+
+const handleExport = async () => {
+  request.get('/admin/export',{
+    responseType: 'blob'
+  }).then(res => {
+    const blob = new Blob([res], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'AdminInformation.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  })
+};
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 

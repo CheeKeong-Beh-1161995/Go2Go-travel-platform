@@ -5,8 +5,8 @@
       <div style="display: flex; align-items: center; margin-bottom: 20px">
         <div style="flex: 1; padding-left: 10px; border-left: 5px solid orangered; font-size: 20px;">Currently on sale.</div>
         <div style="width: fit-content; font-weight: bold">
-          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'hot' }">The hottest</span> |
-          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'new'}">Latest</span>
+          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'hot' }" @click="loadByHot">The hottest</span> |
+          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'new'}" @click="loadByNew">Latest</span>
         </div>
       </div>
 
@@ -16,8 +16,8 @@
             <img :src="item.img" alt="" style="width: 100%; height: 130px; border-radius: 5px">
             <div style="font-size: 16px; margin: 5px 0" class="line2 title">{{ item.name }}</div>
             <div style="display: flex; align-items: center">
-              <div style="color: orange; font-size: 20px; font-weight: bold; flex: 1">￥{{ item.price }}</div>
-              <div style="color: #666">Sold {{ item.orderNum }}</div>
+              <div style="color: orange; font-size: 20px; font-weight: bold; flex: 1">${{ item.price }}</div>
+              <div style="color: #666">Sold: {{ item.num }}</div>
             </div>
           </el-col>
         </el-row>
@@ -51,6 +51,7 @@ const load = () => {
     params: {
       pageNum: data.pageNum,
       pageSize: data.pageSize,
+      sort: data.sort
     }
   }).then(res => {
     if (res.code === '200') {
@@ -60,6 +61,14 @@ const load = () => {
       router.push('/loginNav/login')
     }
   })
+}
+const loadByHot = () =>{
+  data.sort = 'hot';
+  load()
+}
+const loadByNew = () =>{
+  data.sort = 'new';
+  load()
 }
 load()
 </script>

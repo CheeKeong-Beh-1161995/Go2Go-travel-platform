@@ -48,8 +48,13 @@
 .main-body{
     min-height: calc(100vh - 100px);
 }
-:deep(.title:hover){
-
+:deep(.title) {
+    font-size: 18px;
+    color: #333;
+}
+:deep(.title:hover) {
+    color: #189500;
+    text-decoration: underline;
 }
 /*Element-Plus样式覆盖*/
 .el-menu--horizontal {

@@ -120,9 +120,7 @@ const data = reactive({
         }
       }
     ],
-    confirmPassword: [
-      { validator: validatePass, trigger: 'blur' }
-    ]
+
   }
 });
 

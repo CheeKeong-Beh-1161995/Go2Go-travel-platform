@@ -3,8 +3,8 @@
     <div class="bg"></div>
     <div style="width: 60%; margin: 20px auto">
       <div style="margin-bottom: 20px">
-        <el-input size="large" clearable style="width: 500px; margin-right: 5px" v-model="data.name" placeholder="请输入目的地名称搜索"></el-input>
-        <el-button size="large"  type="primary" @click="load">搜索</el-button>
+        <el-input size="large" clearable style="width: 500px; margin-right: 5px" v-model="data.name" placeholder="Enter destination name to search"></el-input>
+        <el-button size="large" type="primary" @click="load">Search</el-button>
       </div>
 
       <div style="margin: 20px 0">
@@ -13,8 +13,8 @@
             <img :src="item.img" alt="" style="width: 100%; height: 130px; border-radius: 5px">
             <div style="font-size: 16px; margin: 5px 0" class="line2 title">{{ item.name }}</div>
             <div style="display: flex; align-items: center">
-              <div style="color: orange; font-size: 20px; font-weight: bold; flex: 1">￥{{ item.price }}</div>
-              <div style="color: #666">已售 {{ item.orderNum }}</div>
+              <div style="color: orange; font-size: 20px; font-weight: bold; flex: 1">${{ item.price }}</div>
+              <div style="color: #666">Sold: {{ item.orderNum }}</div>
             </div>
           </el-col>
         </el-row>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { reactive} from "vue";
+import { reactive } from "vue";
 import request from "@/utils/request.js";
 import router from "@/router/index.js";
 
@@ -37,27 +37,27 @@ const data = reactive({
   pageSize: 8,
   total: 0,
   name: router.currentRoute.value.query.name,
-})
+});
 
 const goPage = (path) => {
-  location.href = path
-}
+  location.href = path;
+};
 
 const load = () => {
   request.get('/tourism/selectPage', {
     params: {
       pageNum: data.pageNum,
       pageSize: data.pageSize,
-      name: data.name
-    }
-  }).then(res => {
+      name: data.name,
+    },
+  }).then((res) => {
     if (res.code === '200') {
-      data.tourismList = res.data?.list || []
-      data.total = res.data?.total
+      data.tourismList = res.data?.list || [];
+      data.total = res.data?.total;
     }
-  })
-}
-load()
+  });
+};
+load();
 </script>
 
 <style scoped>
@@ -70,6 +70,6 @@ load()
   color: red;
 }
 .title:hover {
-  color: orangered!important;
+  color: orangered !important;
 }
 </style>

@@ -7,33 +7,34 @@
     </div>
     <div class="card" style="margin-bottom: 5px">
       <el-button type="danger" plain @click="delBatch">Batch Delete</el-button>
+      <el-button type="info" plain @click="handleExport">Export Excel</el-button>
     </div>
 
     <div class="card" style="margin-bottom: 5px">
       <el-table stripe :data="data.tableData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="orderNo" label="Order Number"></el-table-column>
-        <el-table-column prop="name" label="Product Name"></el-table-column>
-        <el-table-column prop="tourismImg" label="Product Image"></el-table-column>
-        <el-table-column prop="tourismPrice" label="Product Price"></el-table-column>
-        <el-table-column prop="tourismId" label="Product ID"></el-table-column>
-        <el-table-column prop="num" label="Quantity Purchased"></el-table-column>
-        <el-table-column prop="total" label="Total Price"></el-table-column>
-        <el-table-column prop="userName" label="Order Placed By"></el-table-column>
-        <el-table-column prop="time" label="Order Time"></el-table-column>
-        <el-table-column prop="payNo" label="Payment Number"></el-table-column>
-        <el-table-column prop="payTime" label="Payment Time"></el-table-column>
-        <el-table-column prop="status" label="Order Status">
+        <el-table-column prop="orderNo" label="Order Number" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="name" label="Product Name" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="tourismImg" label="Product Image" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="tourismPrice" label="Product Price" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="tourismId" label="Product ID" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="num" label="Quantity Purchased" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="total" label="Total Price" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="userName" label="Order Placed By" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="time" label="Order Time" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="payNo" label="Payment Number" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="payTime" label="Payment Time" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="status" label="Order Status" show-overflow-tooltip>
           <template #default="scope">
-            <el-tag type="danger" v-if="scope.row.status === '已取消'">Cancelled</el-tag>
-            <el-tag type="primary" v-if="scope.row.status === '待支付'">Pending Payment</el-tag>
-            <el-tag type="primary" v-if="scope.row.status === '待发货'">Pending Shipment</el-tag>
-            <el-tag type="success" v-if="scope.row.status === '已完成'">Completed</el-tag>
+            <el-tag type="danger" v-if="scope.row.status === 'Cancelled'">Cancelled</el-tag>
+            <el-tag type="primary" v-if="scope.row.status === 'Pending Payment'">Pending Payment</el-tag>
+            <el-tag type="primary" v-if="scope.row.status === 'Pending Shipment'">Pending Shipment</el-tag>
+            <el-tag type="success" v-if="scope.row.status === 'Completed'">Completed</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="Operation" width="150" fixed="right">
           <template v-slot="scope">
-            <el-button type="primary" @click="changeStatus(scope.row)" v-if="scope.row.status === '待发货'">Ship</el-button>
+<!--            <el-button type="primary" @click="changeStatus(scope.row)" v-if="scope.row.status === 'Pending Payment'">Ship</el-button>-->
             <el-button type="danger" circle :icon="Delete" @click="del(scope.row.id)"></el-button>
           </template>
         </el-table-column>
@@ -51,6 +52,24 @@ import {reactive} from "vue";
 import request from "@/utils/request.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete, Edit} from "@element-plus/icons-vue";
+
+const handleExport = async () => {
+  request.get('/orders/export',{
+    responseType: 'blob'
+  }).then(res => {
+    const blob = new Blob([res], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'OrdersInformation.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  })
+};
 
 const data = reactive({
   formVisible: false,
@@ -103,7 +122,10 @@ const update = () => {
 }
 
 const del = (id) => {
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning' }).then(res => {
     request.delete('/orders/delete/' + id).then(res => {
       if (res.code === '200') {
         ElMessage.success("Deleted successfully")
@@ -121,7 +143,10 @@ const delBatch = () => {
     ElMessage.warning("Please select data")
     return
   }
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning' }).then(res => {
     request.delete("/orders/delete/batch", {data: data.ids}).then(res => {
       if (res.code === '200') {
         ElMessage.success('Operation successful')

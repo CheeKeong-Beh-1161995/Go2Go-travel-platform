@@ -1,40 +1,28 @@
 <template>
   <div>
     <div class="card" style="margin-bottom: 5px">
-      <el-input v-model="data.title" prefix-icon="Search" style="width: 240px; margin-right: 10px" placeholder="Enter title to search"></el-input>
-      <el-button type="info" plain @click="load">Search</el-button>
+      <el-input v-model="data.content" prefix-icon="Search" style="width: 240px; margin-right: 10px" placeholder="Please enter content to search"></el-input>
+      <el-button type="info" plain @click="load">Query</el-button>
       <el-button type="warning" plain style="margin: 0 10px" @click="reset">Reset</el-button>
     </div>
     <div class="card" style="margin-bottom: 5px">
-      <el-button type="danger" plain @click="delBatch">Batch Delete</el-button>
+      <el-button type="danger" plain @click="delBatch">Batch delete</el-button>
+      <el-button type="info" plain @click="handleExport">Export Excel</el-button>
     </div>
 
     <div class="card" style="margin-bottom: 5px">
       <el-table stripe :data="data.tableData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="title" label="Title" show-overflow-tooltip />
-        <el-table-column prop="descr" label="Description" show-overflow-tooltip />
-        <el-table-column prop="content" label="Content" width="100px">
+        <el-table-column label="Post">
           <template #default="scope">
-            <el-button @click="preview(scope.row.content)">View Content</el-button>
+            <a target="_blank" style="color: #1890ff" :href="'/front/' + scope.row.module +'Detail?id=' + scope.row.fid">Click to view</a>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="Publisher" />
-        <el-table-column prop="time" label="Publish Time" />
-        <el-table-column prop="startDate" label="Travel Date" />
-        <el-table-column prop="money" label="Cost" />
-        <el-table-column prop="days" label="Duration" />
-        <el-table-column prop="location" label="Location" />
-        <el-table-column label="Review Status">
-          <template #default="scope">
-            <el-tag type="success" v-if="scope.row.status === '通过'">Approved</el-tag>
-            <el-tag type="danger" v-if="scope.row.status === '拒绝'">Rejected</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="Operation" width="180" fixed="right">
+        <el-table-column prop="content" label="Content" show-overflow-tooltip />
+        <el-table-column prop="userName" label="Commenter" />
+        <el-table-column prop="time" label="Comment Time" />
+        <el-table-column label="Operation" width="80" fixed="right">
           <template v-slot="scope">
-            <el-button type="primary" size="small" @click="changeStatus(scope.row, '通过')" v-if="scope.row.status === '待审核'">Approve</el-button>
-            <el-button type="danger" size="small" @click="changeStatus(scope.row, '拒绝')" v-if="scope.row.status === '待审核'">Reject</el-button>
             <el-button type="danger" circle :icon="Delete" @click="del(scope.row.id)"></el-button>
           </template>
         </el-table-column>
@@ -44,16 +32,6 @@
       <el-pagination @current-change="load" background layout="prev, pager, next" :page-size="data.pageSize" v-model:current-page="data.pageNum" :total="data.total" />
     </div>
 
-    <el-dialog title="Content Preview" v-model="data.formVisibleContent" width="50%" destroy-on-close>
-      <div style="padding: 20px">
-        <div v-html="data.content"></div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="data.formVisibleContent = false">Close</el-button>
-        </span>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -63,13 +41,26 @@ import {reactive} from "vue";
 import request from "@/utils/request.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete, Edit} from "@element-plus/icons-vue";
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import {onBeforeUnmount, ref, shallowRef} from "vue";
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import '@/assets/css/wangeditor.css'
+
+const handleExport = async () => {
+  request.get('/comment/export',{
+    responseType: 'blob'
+  }).then(res => {
+    const blob = new Blob([res], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'CommentInformation.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  })
+};
 
 const data = reactive({
-  user: JSON.parse(localStorage.getItem('xm-user')),
   formVisible: false,
   form: {},
   tableData: [],
@@ -77,64 +68,15 @@ const data = reactive({
   pageSize: 10,
   total: 0,
   title: null,
-  ids: [],
-  content: null,
-  formVisibleContent: false
+  ids: []
 })
-
-const changeStatus = (row, status) => {
-  row.status = status
-  request.put('/comments/update', row).then(res => {
-    if (res.code === '200') {
-      ElMessage.success('Operation successful')
-      data.formVisible = false
-      load()
-    } else {
-      ElMessage.error(res.msg)
-    }
-  })
-}
-
-const preview = (content) => {
-  data.content = content
-  data.formVisibleContent = true
-}
-
-const baseUrl = import.meta.env.VITE_BASE_URL
-const handleFileUpload = (res) => {
-  data.form.cover = res.data
-}
-
-/* wangEditor5 Initialization Start */
-const editorRef = shallowRef()  // Editor instance, must use shallowRef
-const mode = 'default'
-const editorConfig = { MENU_CONF: {} }
-// Image upload configuration
-editorConfig.MENU_CONF['uploadImage'] = {
-  headers: {
-    token: data.user.token,
-  },
-  server: baseUrl + '/files/wang/upload',  // Server image upload interface
-  fieldName: 'file'  // Server image upload interface parameter
-}
-// When the component is destroyed, also destroy the editor in time, otherwise it may cause memory leaks
-onBeforeUnmount(() => {
-  const editor = editorRef.value
-  if (editor == null) return
-  editor.destroy()
-})
-// Record editor instance, important!
-const handleCreated = (editor) => {
-  editorRef.value = editor
-}
-/* wangEditor5 Initialization End */
 
 const load = () => {
-  request.get('/comments/selectPage', {
+  request.get('/comment/selectPage', {
     params: {
       pageNum: data.pageNum,
       pageSize: data.pageSize,
-      title: data.title
+      content: data.content
     }
   }).then(res => {
     if (res.code === '200') {
@@ -143,19 +85,16 @@ const load = () => {
     }
   })
 }
-
 const handleAdd = () => {
   data.form = {}
   data.formVisible = true
 }
-
 const handleEdit = (row) => {
   data.form = JSON.parse(JSON.stringify(row))
   data.formVisible = true
 }
-
 const add = () => {
-  request.post('/comments/add', data.form).then(res => {
+  request.post('/comment/add', data.form).then(res => {
     if (res.code === '200') {
       ElMessage.success('Operation successful')
       data.formVisible = false
@@ -167,7 +106,7 @@ const add = () => {
 }
 
 const update = () => {
-  request.put('/comments/update', data.form).then(res => {
+  request.put('/comment/update', data.form).then(res => {
     if (res.code === '200') {
       ElMessage.success('Operation successful')
       data.formVisible = false
@@ -181,10 +120,10 @@ const save = () => {
 }
 
 const del = (id) => {
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
-    request.delete('/comments/delete/' + id).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?？', 'Delete Confirmation', { type: 'warning' }).then(res => {
+    request.delete('/comment/delete/' + id).then(res => {
       if (res.code === '200') {
-        ElMessage.success("Deleted successfully")
+        ElMessage.success("Deletion successful")
         load()
       } else {
         ElMessage.error(res.msg)
@@ -194,14 +133,13 @@ const del = (id) => {
     console.error(err)
   })
 }
-
 const delBatch = () => {
   if (!data.ids.length) {
     ElMessage.warning("Please select data")
     return
   }
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
-    request.delete("/comments/delete/batch", {data: data.ids}).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?？', 'Delete Confirmation', { type: 'warning' }).then(res => {
+    request.delete("/comment/delete/batch", {data: data.ids}).then(res => {
       if (res.code === '200') {
         ElMessage.success('Operation successful')
         load()
@@ -213,13 +151,12 @@ const delBatch = () => {
     console.error(err)
   })
 }
-
 const handleSelectionChange = (rows) => {
   data.ids = rows.map(v => v.id)
 }
 
 const reset = () => {
-  data.title = null
+  data.content = null
   load()
 }
 

@@ -8,6 +8,7 @@
     <div class="card" style="margin-bottom: 5px">
       <el-button type="primary" plain @click="handleAdd">Add</el-button>
       <el-button type="danger" plain @click="delBatch">Batch Delete</el-button>
+      <el-button type="info" plain @click="handleExport">Export Excel</el-button>
     </div>
 
     <div class="card" style="margin-bottom: 5px">
@@ -28,8 +29,8 @@
       <el-pagination @current-change="load" background layout="prev, pager, next" :page-size="data.pageSize" v-model:current-page="data.pageNum" :total="data.total" />
     </div>
 
-    <el-dialog title="Announcement Information" v-model="data.formVisible" width="40%" destroy-on-close>
-      <el-form ref="form" :model="data.form" label-width="70px" style="padding: 20px">
+    <el-dialog title="Announcement Information" v-model="data.formVisible" width="60%" destroy-on-close>
+      <el-form ref="form" :model="data.form" label-width="170px" style="padding: 20px">
         <el-form-item prop="title" label="Announcement Title">
           <el-input v-model="data.form.title" placeholder="Enter announcement title"></el-input>
         </el-form-item>
@@ -53,6 +54,24 @@ import {reactive} from "vue";
 import request from "@/utils/request.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete, Edit} from "@element-plus/icons-vue";
+
+const handleExport = async () => {
+  request.get('/notice/export',{
+    responseType: 'blob'
+  }).then(res => {
+    const blob = new Blob([res], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'NoticeInformation.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  })
+};
 
 const data = reactive({
   formVisible: false,
@@ -114,7 +133,10 @@ const save = () => {
 }
 
 const del = (id) => {
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning' }).then(res => {
     request.delete('/notice/delete/' + id).then(res => {
       if (res.code === '200') {
         ElMessage.success("Deleted successfully")
@@ -132,7 +154,10 @@ const delBatch = () => {
     ElMessage.warning("Please select data")
     return
   }
-  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', { type: 'warning' }).then(res => {
+  ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning' }).then(res => {
     request.delete("/notice/delete/batch", {data: data.ids}).then(res => {
       if (res.code === '200') {
         ElMessage.success('Operation successful')

@@ -4,9 +4,8 @@
       <div style="padding-left: 20px; flex: 1">
         <i style="font-size: 20px; color: #189500">Embark on Your Next Adventure Today</i>
       </div>
-<!--      天气图标-->
 <!--      <iframe scrolling="no" src="https://widget.tianqiapi.com/?style=tg&skin=pitaya" frameborder="0" width="470" height="60" allowtransparency="true"></iframe>-->
-      <i style="font-size: 20px; color: #189500">Obey Your Thirst</i>
+<!--      <i style="font-size: 20px; color: #189500">Obey Your Thirst</i>-->
     </div>
     <div class="front-header">
       <div class="front-header-left">
@@ -40,6 +39,7 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="goPage('/front/person')">Personal Center</el-dropdown-item>
+                <el-dropdown-item @click="goPage('/front/collect')">View Your Collect</el-dropdown-item>
                 <el-dropdown-item @click="goPage('/front/password')">Change your password</el-dropdown-item>
                 <el-dropdown-item @click="goPage('/front/orders')">View Your Orders</el-dropdown-item>
                 <el-dropdown-item @click="logout">Sign out</el-dropdown-item>
@@ -72,7 +72,11 @@
     router.push('/loginNav/login')
   }
   const goPage = (path) => {
-    location.href = path
+    if (!data.user.id){
+      location.href = '/loginNav/login'
+    }else {
+      location.href = path
+    }
   }
 
   const updateUser = () => {
