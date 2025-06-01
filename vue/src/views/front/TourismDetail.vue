@@ -88,7 +88,7 @@ const addOrder = () => {
   data.form.name = data.tourism.name;
   data.form.price = data.tourism.price;
   data.form.num = 1;
-  data.form.total = (data.tourism.price * (1 - data.tourism.discount)).toFixed(2);
+  data.form.total = (data.tourism.price * data.tourism.discount).toFixed(2);
 };
 
 const load = () => {

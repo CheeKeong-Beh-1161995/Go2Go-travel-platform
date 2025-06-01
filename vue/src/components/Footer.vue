@@ -3,12 +3,12 @@
     <div style="width: 60%; margin: 0 auto; padding: 30px 0; display: flex; color: #ddd;">
       <div style="flex: 1; font-size: 12px; line-height: 25px">
         <div style="font-size: 18px; margin-bottom: 20px">Go2Go</div>
-        <div>A travel booking website more widely used by the younger generation in China</div>
+        <div>A travel booking website more widely used by the younger generation in New Zealand</div>
         <div>A "travel essential" jointly created by hundreds of millions of travelers</div>
-        <div><span class="org">60,000</span> global travel destinations</div>
-        <div><span class="org">600,000</span> new ways to explore destinations</div>
-        <div><span class="org">760,000,000</span> travel guide downloads</div>
-        <div><span class="org">38,000</span> travel product suppliers</div>
+        <div><span class="org">1,000</span> global travel destinations</div>
+        <div><span class="org">10,000</span> new ways to explore destinations</div>
+        <div><span class="org">1,000</span> travel guide downloads</div>
+        <div><span class="org">1,000</span> travel product suppliers</div>
       </div>
       <div style="flex: 1; font-size: 12px; line-height: 25px">
         <div style="font-size: 18px; margin-bottom: 20px;"><a style="color: inherit" href="/front/about">About Us</a></div>

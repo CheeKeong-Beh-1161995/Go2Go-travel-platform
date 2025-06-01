@@ -24,7 +24,7 @@
       </div>
       <div style="flex: 1">
         <el-icon style="top: 5px" size="20" color="orange"><Money/></el-icon>
-        Cost <span style="color: orange">/</span> {{ data.travel.money }} yuan
+        Cost <span style="color: orange">/</span> {{ data.travel.money }}
       </div>
     </div>
 

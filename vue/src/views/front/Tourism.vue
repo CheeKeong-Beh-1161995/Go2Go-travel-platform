@@ -5,8 +5,8 @@
       <div style="display: flex; align-items: center; margin-bottom: 20px">
         <div style="flex: 1; padding-left: 10px; border-left: 5px solid orangered; font-size: 20px;">Hot Sales</div>
         <div style="width: fit-content; font-weight: bold">
-          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'hot' }" @click="loadByHot">Hottest</span> |
-          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'new'}" @click="loadByNew">Newest</span>
+          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'hot' }" @click="loadByHot">Most popular</span> |
+          <span style="cursor: pointer" :class="{ 'active' : data.sort === 'new'}" @click="loadByNew">Latest</span>
         </div>
       </div>
 

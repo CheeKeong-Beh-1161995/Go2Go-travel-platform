@@ -2,7 +2,7 @@
   <div>
     <div class="front-notice">
       <div style="padding-left: 20px; flex: 1">
-        <i style="font-size: 20px; color: #189500">Embark on Your Next Adventure Today</i>
+        <i style="font-size: 20px; color: #189500">Start on Your Next Adventure Today</i>
       </div>
 <!--      <iframe scrolling="no" src="https://widget.tianqiapi.com/?style=tg&skin=pitaya" frameborder="0" width="470" height="60" allowtransparency="true"></iframe>-->
 <!--      <i style="font-size: 20px; color: #189500">Obey Your Thirst</i>-->

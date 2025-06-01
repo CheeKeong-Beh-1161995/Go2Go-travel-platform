@@ -3,7 +3,7 @@
     <div style="text-align: right">
       <el-button @click="router.back()"> << return</el-button>
     </div>
-    <div style="margin: 20px 0; text-align: center; font-size: 24px">Write a Travelogue</div>
+    <div style="margin: 20px 0; text-align: center; font-size: 24px">Write a Review</div>
     <div>
       <el-form ref="form" :model="data.form" label-width="190px" style="padding: 20px" :rules="data.rules">
         <el-form-item prop="title" label="Title">
@@ -51,7 +51,7 @@
           </div>
         </el-form-item>
         <div style="text-align: center">
-          <el-button type="primary" style="padding: 20px 40px" @click="save">Publish Travelogue</el-button>
+          <el-button type="primary" style="padding: 20px 40px" @click="save">Publish Review</el-button>
         </div>
       </el-form>
     </div>
