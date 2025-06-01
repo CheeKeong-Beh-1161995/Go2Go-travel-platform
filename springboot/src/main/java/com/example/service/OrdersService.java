@@ -59,13 +59,13 @@ public class OrdersService {
         }
         orders.setTime(DateUtil.now());
         if (car == null) {
-            orders.setTourismPrice(tourism.getPrice().multiply(BigDecimal.valueOf(tourism.getDiscount())));
+            orders.setTourismPrice(tourism.getPrice().multiply(BigDecimal.valueOf(1 - tourism.getDiscount())));
             ordersMapper.insert(orders);
             tourism.setStore(tourism.getStore() - orders.getNum());
             tourism.setNum(tourism.getNum() + orders.getNum());
             tourismMapper.updateById(tourism);
         } else {
-            orders.setTourismPrice(car.getPrice().multiply(BigDecimal.valueOf(car.getDiscount())));
+            orders.setTourismPrice(car.getPrice().multiply(BigDecimal.valueOf(1 - car.getDiscount())));
             ordersMapper.insert(orders);
             car.setStore(car.getStore() - orders.getNum());
             car.setNum(car.getNum() + orders.getNum());
