@@ -133,6 +133,7 @@ const data = reactive({
   title: null,
   ids: [],
   totalPrice: 0,
+  rows: []
 })
 
 const checkSelectable = (row) =>{
@@ -188,7 +189,7 @@ watch(
     (newLength, oldLength) => {
       data.totalPrice = 0;
       for (let i = 0; i<newLength; i++){
-        data.totalPrice = data.totalPrice + data.tableData[i].total
+        data.totalPrice = data.totalPrice + data.rows[i].total
       }
     }
 );
@@ -213,7 +214,7 @@ const handleExport = async () => {
 
 const delBatch = () => {
   if (!data.ids.length) {
-    ElMessage.warning("Please select product")
+    ElMessage.warning("Please select data")
     return
   }
   ElMessageBox.confirm('Once deleted, the data cannot be recovered. Are you sure you want to delete it?', 'Delete Confirmation', {
@@ -235,7 +236,7 @@ const delBatch = () => {
 
 const payBatch = () => {
   if (!data.ids.length) {
-    ElMessage.warning("No products selected")
+    ElMessage.warning("Please select data")
     return
   }
   ElMessageBox.confirm('Are you sure you want to pay it?', 'Pay Confirmation', {
@@ -256,6 +257,7 @@ const payBatch = () => {
 }
 
 const handleSelectionChange = (rows) => {
+  data.rows = rows;
   data.ids = rows.map(v => v.id)
 }
 

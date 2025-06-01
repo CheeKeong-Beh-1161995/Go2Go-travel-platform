@@ -34,7 +34,7 @@
         </el-table-column>
         <el-table-column label="Operation" width="150" fixed="right">
           <template v-slot="scope">
-            <el-button type="primary" @click="changeStatus(scope.row)" v-if="scope.row.status === 'Pending Payment'">Approve</el-button>
+<!--            <el-button type="primary" @click="changeStatus(scope.row)" v-if="scope.row.status === 'Pending Payment'">Ship</el-button>-->
             <el-button type="danger" circle :icon="Delete" @click="del(scope.row.id)"></el-button>
           </template>
         </el-table-column>
